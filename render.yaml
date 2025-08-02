@@ -1,70 +1,66 @@
-# render.yaml
-# Production-ready n8n deployment with GitOps workflow automation
-# Automatically imports workflows and credentials from your repo on every deploy
-
 services:
   - type: web
     name: n8n-gitops-engine
     env: docker
-    region: oregon
-    plan: free # Free tier - service spins down after 15 mins of inactivity
-    
-    # Build custom Docker image from this repository
     dockerfilePath: ./Dockerfile
-    
-    # Auto-deploy on pushes to main branch
-    autoDeploy: true
-    branch: main
-    
-    healthCheckPath: /healthz
-
+    plan: free
+    region: oregon
+    buildCommand: ""
+    startCommand: ""
     envVars:
-      # --- Core n8n Settings ---
-      - key: N8N_HOST
-        value: 0.0.0.0
-      - key: PORT
-        value: "5678"
-      - key: WEBHOOK_URL
-        value: https://my-n8n-render-3b3p.onrender.com/
-      - key: N8N_ENCRYPTION_KEY
-        value: "c4a7d26f4d2c61f8b27d40a9e8c2b39c73e4b7e01c215f9d3a8e55f9b19f65d3"
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "false"
-
-      # --- Supabase Database Connection ---
-      - key: DB_TYPE
-        value: postgresdb
-      - key: DB_POSTGRESDB_HOST
-        value: aws-0-us-east-2.pooler.supabase.com
-      - key: DB_POSTGRESDB_PORT
-        value: "6543"
+      # Supabase Database Configuration
       - key: DB_POSTGRESDB_DATABASE
         value: postgres
-      - key: DB_POSTGRESDB_USER
-        value: postgres.cggjoejejessncutjlgf
+      - key: DB_POSTGRESDB_HOST
+        value: db.dlblqryvyavvveawduct.supabase.co
       - key: DB_POSTGRESDB_PASSWORD
-        sync: false # Set this manually in Render Dashboard for security
+        value: Recovery8148
+      - key: DB_POSTGRESDB_PORT
+        value: "5432"
       - key: DB_POSTGRESDB_SCHEMA
         value: public
       - key: DB_POSTGRESDB_SSL
         value: "true"
-
-      # --- Performance & Stability ---
-      - key: N8N_RUNNERS_ENABLED
-        value: "true"
-      - key: GENERIC_TIMEZONE
-        value: America/Los_Angeles
-      - key: TZ
-        value: America/Los_Angeles
-      - key: N8N_LOG_LEVEL
-        value: info
-
-      # --- Data Pruning (keeps database lean) ---
+      - key: DB_POSTGRESDB_USER
+        value: postgres
+      - key: DB_TYPE
+        value: postgres
+      
+      # n8n Application Configuration
+      - key: EXECUTIONS_DATA_MAX_AGE
+        value: "336"
       - key: EXECUTIONS_DATA_PRUNE
         value: "true"
-      - key: EXECUTIONS_DATA_MAX_AGE
-        value: "336" # 14 days
-      - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
-        value: "none"
       - key: EXECUTIONS_DATA_SAVE_ON_ERROR
         value: "all"
+      - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
+        value: "all"
+      - key: GENERIC_TIMEZONE
+        value: "America/New_York"
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        value: "admin"
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: "your-admin-password"
+      - key: N8N_ENCRYPTION_KEY
+        value: "your-encryption-key-here"
+      - key: N8N_HOST
+        value: "0.0.0.0"
+      - key: N8N_LOG_LEVEL
+        value: "info"
+      - key: N8N_METRICS_ENABLED
+        value: "false"
+      - key: N8N_PORT
+        value: "5678"
+      - key: PORT
+        value: "5678"
+      - key: TZ
+        value: "America/New_York"
+      - key: WEBHOOK_URL
+        value: "https://n8n-gitops-engine.onrender.com"
+      
+      # Database Connection String (Alternative format)
+      # You can use this instead of individual DB variables if preferred
+      # - key: DATABASE_URL
+      #   value: postgresql://postgres:Recovery8148@db.dlblqryvyavvveawduct.supabase.co:5432/postgres?sslmode=require
