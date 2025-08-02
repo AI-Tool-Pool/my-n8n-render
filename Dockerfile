@@ -1,16 +1,24 @@
-# Use the official n8n Docker image
-FROM n8nio/n8n:latest
-
-# Set working directory
+# Stage 1: Build
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy workflow and credential directories
-COPY --chown=node:node ./workflows ./workflows
-COPY --chown=node:node ./credentials ./credentials
+# Copy only package files for better caching
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
 
-# Copy and make executable the entrypoint script
-COPY --chown=node:node ./entrypoint.sh .
-RUN chmod +x ./entrypoint.sh
+# Stage 2: Runtime
+FROM gcr.io/distroless/nodejs18-debian11
+WORKDIR /app
 
-# Use custom entrypoint that imports files before starting n8n
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Copy built app
+COPY --from=builder /app/node_modules ./node_modules
+COPY --chown=nonroot:nonroot . .
+
+USER nonroot
+EXPOSE 5678
+
+# Health check via n8n's built-in endpoint
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:5678/healthz', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+
+ENTRYPOINT ["node", "packages/cli/bin/n8n"]

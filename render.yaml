@@ -5,62 +5,37 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     region: oregon
-    buildCommand: ""
-    startCommand: ""
     envVars:
-      # Supabase Database Configuration
-      - key: DB_POSTGRESDB_DATABASE
-        value: postgres
-      - key: DB_POSTGRESDB_HOST
-        value: db.dlblqryvyavvveawduct.supabase.co
-      - key: DB_POSTGRESDB_PASSWORD
-        value: Recovery8148
-      - key: DB_POSTGRESDB_PORT
-        value: "5432"
-      - key: DB_POSTGRESDB_SCHEMA
-        value: public
-      - key: DB_POSTGRESDB_SSL
-        value: "true"
-      - key: DB_POSTGRESDB_USER
-        value: postgres
-      - key: DB_TYPE
-        value: postgres
+      # Database (using single URL for clarity)
+      - key: DATABASE_URL
+        fromSecret: DATABASE_URL
       
-      # n8n Application Configuration
+      # Security
+      - key: N8N_BASIC_AUTH_USER
+        fromSecret: N8N_BASIC_AUTH_USER
+      - key: N8N_BASIC_AUTH_PASSWORD
+        fromSecret: N8N_BASIC_AUTH_PASSWORD
+      - key: N8N_ENCRYPTION_KEY
+        fromSecret: N8N_ENCRYPTION_KEY
+      
+      # Application
       - key: EXECUTIONS_DATA_MAX_AGE
         value: "336"
       - key: EXECUTIONS_DATA_PRUNE
         value: "true"
-      - key: EXECUTIONS_DATA_SAVE_ON_ERROR
-        value: "all"
-      - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
-        value: "all"
       - key: GENERIC_TIMEZONE
         value: "America/New_York"
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "true"
-      - key: N8N_BASIC_AUTH_USER
-        value: "admin"
-      - key: N8N_BASIC_AUTH_PASSWORD
-        value: "your-admin-password"
-      - key: N8N_ENCRYPTION_KEY
-        value: "your-encryption-key-here"
       - key: N8N_HOST
         value: "0.0.0.0"
-      - key: N8N_LOG_LEVEL
-        value: "info"
-      - key: N8N_METRICS_ENABLED
-        value: "false"
       - key: N8N_PORT
         value: "5678"
-      - key: PORT
-        value: "5678"
-      - key: TZ
-        value: "America/New_York"
       - key: WEBHOOK_URL
-        value: "https://n8n-gitops-engine.onrender.com"
-      
-      # Database Connection String (Alternative format)
-      # You can use this instead of individual DB variables if preferred
-      # - key: DATABASE_URL
-      #   value: postgresql://postgres:Recovery8148@db.dlblqryvyavvveawduct.supabase.co:5432/postgres?sslmode=require
+        fromService:
+          type: web
+          name: n8n-gitops-engine
+          property: defaultURL
+      - key: N8N_METRICS_ENABLED
+        value: "false"
+    
+    healthCheckPath: /healthz
+    restartPolicy: unless-stopped
