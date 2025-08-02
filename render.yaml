@@ -1,41 +1,64 @@
+# Exported from Render on 2025-08-02T15:09:45Z
 services:
-  - type: web
-    name: n8n-gitops-engine
-    env: docker
-    dockerfilePath: ./Dockerfile
-    plan: free
-    region: oregon
-    envVars:
-      # Database (using single URL for clarity)
-      - key: DATABASE_URL
-        fromSecret: DATABASE_URL
-      
-      # Security
-      - key: N8N_BASIC_AUTH_USER
-        fromSecret: N8N_BASIC_AUTH_USER
-      - key: N8N_BASIC_AUTH_PASSWORD
-        fromSecret: N8N_BASIC_AUTH_PASSWORD
-      - key: N8N_ENCRYPTION_KEY
-        fromSecret: N8N_ENCRYPTION_KEY
-      
-      # Application
-      - key: EXECUTIONS_DATA_MAX_AGE
-        value: "336"
-      - key: EXECUTIONS_DATA_PRUNE
-        value: "true"
-      - key: GENERIC_TIMEZONE
-        value: "America/New_York"
-      - key: N8N_HOST
-        value: "0.0.0.0"
-      - key: N8N_PORT
-        value: "5678"
-      - key: WEBHOOK_URL
-        fromService:
-          type: web
-          name: n8n-gitops-engine
-          property: defaultURL
-      - key: N8N_METRICS_ENABLED
-        value: "false"
-    
-    healthCheckPath: /healthz
-    restartPolicy: unless-stopped
+- type: web
+  name: n8n-gitops-engine
+  runtime: docker
+  repo: https://github.com/AI-Tool-Pool/my-n8n-render
+  plan: free
+  envVars:
+  - key: N8N_HOST
+    sync: false
+  - key: DB_POSTGRESDB_USER
+    sync: false
+  - key: N8N_PORT
+    sync: false
+  - key: N8N_METRICS_ENABLED
+    sync: false
+  - key: N8N_BASIC_AUTH_PASSWORD
+    sync: false
+  - key: N8N_BASIC_AUTH_USER
+    sync: false
+  - key: DB_POSTGRESDB_PASSWORD
+    sync: false
+  - key: DB_TYPE
+    sync: false
+  - key: DB_POSTGRESDB_SSL
+    sync: false
+  - key: DB_POSTGRESDB_SCHEMA
+    sync: false
+  - key: DB_POSTGRESDB_PORT
+    sync: false
+  - key: DB_POSTGRESDB_HOST
+    sync: false
+  - key: DB_POSTGRESDB_DATABASE
+    sync: false
+  - key: EXECUTIONS_DATA_SAVE_ON_ERROR
+    sync: false
+  - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
+    sync: false
+  - key: EXECUTIONS_DATA_MAX_AGE
+    sync: false
+  - key: EXECUTIONS_DATA_PRUNE
+    sync: false
+  - key: N8N_LOG_LEVEL
+    sync: false
+  - key: TZ
+    sync: false
+  - key: GENERIC_TIMEZONE
+    sync: false
+  - key: N8N_RUNNERS_ENABLED
+    sync: false
+  - key: N8N_BASIC_AUTH_ACTIVE
+    sync: false
+  - key: N8N_ENCRYPTION_KEY
+    sync: false
+  - key: WEBHOOK_URL
+    sync: false
+  - key: PORT
+    sync: false
+  region: oregon
+  dockerCommand: docker run -p 5678:5678 -e DATABASE_URL=postgresql://postgres:Bcmoney69$@db.dlblqryvyavvveawduct.supabase.co:5432/postgres
+  dockerContext: .
+  dockerfilePath: ./Dockerfile
+  autoDeployTrigger: commit
+version: "1"
