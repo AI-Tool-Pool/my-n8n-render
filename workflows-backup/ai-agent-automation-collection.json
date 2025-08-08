@@ -1,0 +1,1345 @@
+{
+  "name": "AI Agent Collection - Optimized for Free Tier",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Prompt Chaining\n## A workflow where the output of one LLM call becomes the input for the next. This sequential design allows for structured reasoning and step-by-step task completion.",
+        "height": 482.89036332111846,
+        "width": 1544.879651174883
+      },
+      "id": "13deaf1a-0a4c-454a-a423-79cf560b7c8e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [340, 180]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "8893f726-e0c1-43ce-ac3a-b80cea923069",
+      "name": "Meta Llama 3.1 70B",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [600, 500],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "a4c796e6-5b45-4e51-a43d-f6b355d1a768",
+      "name": "Meta Llama 3.1 70B1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [920, 500],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "3dbe4765-7201-4620-b22f-3095185a75da",
+      "name": "Meta Llama 3.1 70B2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1240, 500],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Routing\n## A workflow where user input is classified and directs to a specific task (can be a specific LLM, specific prompt, ect...). This allows you to optimize for many inputs in isolation.",
+        "height": 427.0734226419352,
+        "width": 1542.8775448623883,
+        "color": 2
+      },
+      "id": "90e27eff-5242-42a1-874f-7931c233be5c",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [340, 700]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7e5de997-1289-4edf-b4bb-a8b102c6b1a9",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "11b33c68-7227-446c-a43f-94ea0f0c0aeb",
+              "name": "modelRoutes",
+              "value": "{\"Qwen/Qwen2.5-Coder-32B-Instruct\": \"Best model choice for code generation tasks.\", \"Gryphe/MythoMax-L2-13b\": \"Best model choice for story-telling, role-playing and fantasy tasks.\", \"Qwen/QwQ-32B-Preview\": \"Best model for reasoning, planning and multi-step tasks\"}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0cfe48d7-380e-4bff-b5d5-64deef681b79",
+      "name": "Routing Chat",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [560, 860]
+    },
+    {
+      "parameters": {
+        "content": "## Sample Question\n1. Sally earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn? ",
+        "height": 165.89529895234932,
+        "width": 506.20915782305957,
+        "color": 7
+      },
+      "id": "5017683f-e7eb-4431-9bf2-4d5ad29500dd",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-200, 180]
+    },
+    {
+      "parameters": {
+        "content": "## Sample Question\n1. Produce python snippet to check to see if a number is prime or not.\n2. Plan and provide a short itenary for a 2 week vacation in Europe.\n3. Write a short story about a dragon and a knight.",
+        "height": 165.89529895234932,
+        "width": 517.4341977554199,
+        "color": 7
+      },
+      "id": "9f9c243b-11ca-4002-abef-46f6553ef071",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-220, 700]
+    },
+    {
+      "parameters": {
+        "content": "# Parallelization\n## Parallelization takes advantage of tasks that can broken up into discrete independent parts. The user's prompt is passed to multiple LLMs simultaneously. Once all the LLMs respond, their answers are all sent to a final LLM call to be aggregated for the final answer.",
+        "height": 490.88903567948137,
+        "width": 1549.7231016430667,
+        "color": 3
+      },
+      "id": "b12aa9db-b8d9-449e-9aad-bff62c46cf8d",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [340, 1160]
+    },
+    {
+      "parameters": {
+        "content": "## Sample Question\n1. Jenna and her mother picked some apples from their apple farm.\n  Jenna picked half as many apples as her mom.\n  \n  If her mom got 20 apples, how many apples did they both pick?",
+        "height": 165.89529895234932,
+        "width": 517.4341977554199,
+        "color": 7
+      },
+      "id": "beeabb12-996c-4a9f-a3f9-df11dcea43de",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-220, 1160]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f2edee6e-bac8-4ea6-ac0f-387cc4879796",
+              "name": "Reference Models",
+              "value": "[\"microsoft/WizardLM-2-8x22B\", \"Qwen/Qwen2.5-72B-Instruct-Turbo\", \"google/gemma-2-27b-it\", \"meta-llama/Llama-3.3-70B-Instruct-Turbo\"]",
+              "type": "array"
+            },
+            {
+              "id": "6f444639-1618-462a-a9fd-a379e6de2d66",
+              "name": "Aggregator Model",
+              "value": "deepseek-ai/DeepSeek-V3",
+              "type": "string"
+            },
+            {
+              "id": "fb0fa178-b64b-47d0-87a5-ca212bcaab63",
+              "name": "Aggregator System Prompt",
+              "value": "=You have been provided with a set of responses from various open-source models to the latest user query. Your task is to synthesize these responses into a single, high-quality response. It is crucial to critically evaluate the information provided in these responses, recognizing that some of it may be biased or incorrect. Your response should not simply replicate the given answers but should offer a refined, accurate, and comprehensive reply to the instruction. Ensure your response is well-structured, coherent, and adheres to the highest standards of accuracy and reliability.\n\nResponses from models:",
+              "type": "string"
+            },
+            {
+              "id": "e2f9b53e-75aa-45f2-9e88-ab2742c4400b",
+              "name": "chatInput",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0061c513-4575-4511-ab6c-9c633c6eed4c",
+      "name": "Set Global Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [560, 1360]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "['Reference Models']",
+        "options": {}
+      },
+      "id": "df29160b-eeb0-4610-b6ad-19378aa08ed2",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [720, 1360]
+    },
+    {
+      "parameters": {
+        "model": "={{ $json['[\\'Reference Models\\']'] }}",
+        "options": {
+          "baseURL": "https://api.together.xyz/v1"
+        }
+      },
+      "id": "33b6d11d-12d1-493d-8b52-de20500dca07",
+      "name": "Multi Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [880, 1500],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Set Global Variables').item.json.chatInput }}"
+      },
+      "id": "fcf93750-354d-44f1-a5cf-36264a00e90d",
+      "name": "Different Model LLM",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [880, 1360]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "7875f793-10b5-4fbf-b2fb-7207adf78695",
+      "name": "Deepseek V3 Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1320, 1500],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5c34c457-23f5-4b17-b923-56eb9bf54694",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1180, 1360]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "499706b5-e3e7-4159-aefa-56d846e5c7a9",
+              "name": "text",
+              "value": "={{ $('Aggregate').item.json.text.map((response, i) => `## Intermediate Response: ${i + 1}:\\n${response}`).join('\\n\\n') }}\n\n## Final Answer:\n{{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d724486e-6702-4e83-8d2a-8996cfd3e795",
+      "name": "Return Result1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1640, 1360]
+    },
+    {
+      "parameters": {
+        "content": "# Orchestrator-workers\n## This workflow begins with an LLM breaking down the task into subtasks that are dynamically determined based on the input. These subtasks are then processed in parallel by multiple worker LLMs. Finally, the orchestrator LLM synthesizes the workers' outputs into the final result.",
+        "height": 490.88903567948137,
+        "width": 1549.7231016430667,
+        "color": 4
+      },
+      "id": "dc498ec8-12b7-4408-b41f-bd01b1407d9a",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [340, 1700]
+    },
+    {
+      "parameters": {
+        "content": "## Sample Question\n1. Write a product description for a new eco-friendly water bottle. \n    The target_audience is environmentally conscious millennials and key product\n    features are: plastic-free, insulated, lifetime warranty",
+        "height": 165.89529895234932,
+        "width": 517.4341977554199,
+        "color": 7
+      },
+      "id": "ffe2cc60-4366-4177-ab3b-13b577607f99",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-220, 1720]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "af268687-1a11-4f65-b655-9a65d140c0e4",
+      "name": "Meta Llama 3.1 70B3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [740, 1000],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"route\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Qwen/Qwen2.5-Coder-32B-Instruct\",\n        \"Gryphe/MythoMax-L2-13b\",\n        \"Qwen/QwQ-32B-Preview\"\n      ]\n    },\n    \"reason\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"route\",\n    \"reason\"\n  ],\n  \"additionalProperties\": false,\n  \"$schema\": \"https://json-schema.org/draft/2019-09/schema#\"\n}"
+      },
+      "id": "a16a608c-9ecc-4ed1-a530-d81db5b6efe6",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [900, 1000]
+    },
+    {
+      "parameters": {
+        "model": "={{ $json.output.route }}",
+        "options": {
+          "baseURL": "https://api.together.xyz/v1"
+        }
+      },
+      "id": "4e85d873-8cbc-4f0b-b3a1-fc76b42f6e04",
+      "name": "Routing Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1060, 1000],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "={{ $('Routing Chat').item.json.chatInput }}"
+            }
+          ]
+        }
+      },
+      "id": "bae8dbc9-36ba-46f9-a747-677cd77827cb",
+      "name": "Main Function Prompt1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1060, 860]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Set Global Variables').item.json[\"Aggregator System Prompt\"] }}\n\n{{ $json.text.map((response, i) => `${i + 1}. ${response}`).join('\\n\\n') }}"
+      },
+      "id": "12ae5485-15c3-4a00-8d8b-b1bea1284be5",
+      "name": "Aggregator Agent",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1320, 1360]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "9e3763d3-9cd4-4483-ac27-879ffc5f0420",
+      "name": "Meta Llama 3.1 70B4",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [580, 2040],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"analysis\": {\n      \"type\": \"string\"\n    },\n    \"tasks\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"type\": {\n            \"type\": \"string\",\n            \"enum\": [\"formal\", \"conversational\", \"hybrid\"]\n          },\n          \"description\": {\n            \"type\": \"string\"\n          }\n        },\n        \"required\": [\"type\", \"description\"]\n      }\n    }\n  },\n  \"required\": [\n    \"analysis\",\n    \"tasks\"\n  ],\n  \"additionalProperties\": false,\n  \"$schema\": \"https://json-schema.org/draft/2019-09/schema#\"\n}"
+      },
+      "id": "ee899fa7-8f71-4279-a056-f9bf1851828c",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [740, 2040]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.tasks",
+        "options": {}
+      },
+      "id": "01d2e591-8881-4bc2-a4f9-400ee71b5c6d",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [900, 1900]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "37c4c1d7-e34f-4236-ac8a-65f7ac3e534b",
+      "name": "Meta Llama 3.1 70B5",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1080, 2040],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate content based on:\nTask: {{ $('When chat message received').item.json.chatInput }}\nStyle: {{ $json.type }}\nGuidelines: {{ $json.description }}\n\nReturn only your response:\n[Your content here, maintaining the specified style and fully addressing requirements.]"
+      },
+      "id": "2b7df518-f8a5-4d80-975c-c9a37b1496dd",
+      "name": "Work Model LLM",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1060, 1900]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "499706b5-e3e7-4159-aefa-56d846e5c7a9",
+              "name": "text",
+              "value": "=## Analysis:\n{{ $('Orchestrator Prompt').item.json.output.analysis }}\n\n## Tasks:\n```json\n{{ JSON.stringify($('Orchestrator Prompt').item.json.output.tasks, null, 2) }}\n```\n{{ $json.text.map((w, index) => `## WORKER RESULT (${$('Orchestrator Prompt').item.json.output.tasks[index].type})\\n${w}`).join('\\n\\n') }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9715e9a7-450b-4549-a9f1-b4e4543254c7",
+      "name": "Return Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1580, 1900]
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f77bfac0-89fa-4948-8a84-8d30ddb59c00",
+      "name": "Aggregate1",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1400, 1900]
+    },
+    {
+      "parameters": {
+        "content": "# Evaluator-optimizer\n## The evaluator-optimizer workflow ensures task requirements are fully met through iterative refinement. An LLM performs a task, followed by a second LLM evaluating whether the result satisfies all specified criteria. If not, the process repeats with adjustments, continuing until the evaluator confirms all requirements are met.",
+        "height": 536.7353004502938,
+        "width": 1549.7231016430667,
+        "color": 5
+      },
+      "id": "e14b51e1-1ba5-4bed-befa-1ee943c1089c",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [340, 2240]
+    },
+    {
+      "parameters": {
+        "content": "## Sample Question\n1. Implement a Stack with:\n\n    1. push(x)\n    2. pop()\n    3. getMin()\n\n  All operations should be O(1).",
+        "height": 165.89529895234932,
+        "width": 517.4341977554199,
+        "color": 7
+      },
+      "id": "5709d8c1-f7b3-4d50-b1a7-0bc7f1a0007b",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-220, 2240]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-coder",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "92502753-f052-4268-b7ed-2d657db39797",
+      "name": "Qwen 2.5 Coder 32B",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [720, 2580],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "74eb1482-7862-47bd-8ccd-5f3a38bf4481",
+              "name": "Context",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a2cb1693-71c0-4409-b7a3-ff64999d7e6a",
+      "name": "Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [540, 2440]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "e67976e4-c477-4106-9a89-d4dff468a3e3",
+      "name": "Meta Llama 3.1 70B6",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1020, 2580],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"evaluation\": {\n      \"type\": \"string\",\n      \"enum\": [\"PASS\", \"NEEDS_IMPROVEMENT\", \"FAIL\"]\n    },\n    \"feedback\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"evaluation\",\n    \"feedback\"\n  ],\n  \"additionalProperties\": false,\n  \"$schema\": \"https://json-schema.org/draft/2019-09/schema#\"\n}"
+      },
+      "id": "03b11f67-6010-49a7-9a19-028aae06048c",
+      "name": "Structured Output Parser2",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [1200, 2580]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c51708ad-09bb-4812-9680-dd8a170b6163",
+              "leftValue": "={{ $json.output.evaluation }}",
+              "rightValue": "PASS",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6957dc30-46ba-4b6b-a25a-c5da216c0aab",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1340, 2440]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43ee589b-916c-41f9-ba28-525cc3c065b7",
+              "name": "Context",
+              "value": "=Previous attempts:\n\n{{ $('Generate Prompt').last().json.text }}\n\nFeedback: {{ $json.output.feedback }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "94718077-ee69-4d41-b4d3-dcd27745be47",
+      "name": "Evaluate Prompt1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1540, 2580]
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Given a user prompt/query: {{ $json.chatInput }}, select the best option out of the following routes:\n\n{{ $json.modelRoutes.keys().map(key => `${key}: ${$json.modelRoutes[key]}`).join('\\n') }}\n\nAnswer only in JSON format."
+            }
+          ]
+        }
+      },
+      "id": "3ce90b11-41a5-4b27-b969-70197e4375ad",
+      "name": "Routing Prompt",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [740, 860]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Your goal is to complete the task based on <user input>. If there is feedback \nfrom your previous generations, you should reflect on them to improve your solution.\n\nOutput your answer concisely in the following format: \n\nThoughts:\n[Your understanding of the task and feedback and how you plan to improve]\n\nResponse:\n[Your code implementation here]\n\nTask: {{ $('When chat message received').item.json.chatInput }}\n\n{{ $json.Context }}"
+      },
+      "id": "689bf9dc-5cc2-4311-b529-9b9523bc51af",
+      "name": "Generate Prompt",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [700, 2440]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5d4bfd9-2706-4bf7-88ad-f32b4611883e",
+              "name": "text",
+              "value": "=## Generation start\n\n{{ $('Generate Prompt').item.json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "52c17e7b-1561-4e01-a0ec-cb690c0603e4",
+      "name": "Return Result2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1540, 2420]
+    },
+    {
+      "parameters": {
+        "content": "# Autonomous Agent\n## An agent-based workflow where LLMs act autonomously within a loop, interacting with their environment and receiving feedback to refine their actions and decisions.",
+        "height": 487.6973962484467,
+        "width": 1549.7231016430667,
+        "color": 6
+      },
+      "id": "e0f14302-c30e-4c8f-8c0f-39c7ae65a9be",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [380, 3700]
+    },
+    {
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
+        }
+      },
+      "id": "bc4f10ca-16fb-4348-a56a-bfbbfee112ca",
+      "name": "Meta Llama 3.1 70B7",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [900, 4020],
+      "credentials": {
+        "openAiApi": {
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1d643bc0-5915-41e1-9342-56d708d7d3bb",
+      "name": "SerpAPI",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [1080, 4020],
+      "credentials": {
+        "serpApi": {
+          "id": "SERP-API",
+          "name": "SERP API"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "838ead21-2cc1-40e5-9fc9-f4e5c33f31be",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [1000, 4020]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "10881720-82a1-4225-8166-78c747793702",
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1aa9d168-1b5c-4fad-8957-996199910aa3",
+      "name": "Session ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [660, 3860]
+    },
+    {
+      "parameters": {
+        "content": "## Sample Question\n1. What is Happening in Crypto World\n2. How about other crypto, can you give a price summary of Bitcoin and those others\n\n",
+        "height": 165.89529895234932,
+        "width": 517.4341977554199,
+        "color": 7
+      },
+      "id": "a0e4919e-6ba2-42f6-b4c8-dcc06957bc37",
+      "name": "Sticky Note11",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-180, 3700]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {}
+      },
+      "id": "28e119ee-b925-4dba-b83e-463043ddaa4a",
+      "name": "Environment AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [880, 3860]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Evaluate this following code implementation for:\n\n1. code correctness\n2. time complexity\n3. style and best practices\n\nYou should be evaluating only and not attempting to solve the task.\n\nOnly output \"PASS\" if all criteria are met and you have no further suggestions for improvements.\n\nProvide detailed feedback if there are areas that need improvement. You should specify what needs improvement and why. Make sure to only use a single line without newlines for the feedback.\n\nOnly output JSON.\n\nOriginal task: {{ $('When chat message received').first().json.chatInput }}\n\nContent to evaluate: {{ $json.text }}",
+        "hasOutputParser": true
+      },
+      "id": "5b9dc799-7135-4d5f-a89c-451f74010190",
+      "name": "Evaluate Prompt",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1020, 2440]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this task and break it down into 2-3 distinct approaches:\n\nTask: {{ $json.chatInput }}\n\nProvide an Analysis:\n\nExplain your understanding of the task and which variations would be valuable.\nFocus on how each approach serves different aspects of the task.\n\nAlong with the analysis, provide 2-3 approaches to tackle the task, each with a brief description:\n\nFormal style: Write technically and precisely, focusing on detailed specifications\nConversational style: Write in a friendly and engaging way that connects with the reader\nHybrid style: Tell a story that includes technical details, combining emotional elements with specifications\n\nReturn only JSON output.",
+        "hasOutputParser": true
+      },
+      "id": "ed746597-9f5a-4b11-8e49-7b089b119420",
+      "name": "Orchestrator Prompt",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [580, 1900]
+    },
+    {
+      "parameters": {
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Given the math problem, ONLY extract any relevant numerical information and how it can be used."
+            }
+          ]
+        }
+      },
+      "id": "9e5d7a76-0cd0-4d8a-a45e-b266676c89aa",
+      "name": "Extract Relevant Numerical Information",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [600, 360]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Given the steps, express the final answer to the problem."
+            }
+          ]
+        }
+      },
+      "id": "45395759-273b-4a8a-a060-12379953d158",
+      "name": "Generate Final Answer",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [1240, 360]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Given the numberical information extracted, ONLY express the steps you would take to solve the problem."
+            }
+          ]
+        }
+      },
+      "id": "7f7f6f51-d26a-45ec-a531-f1c79f5d3422",
+      "name": "Step To Solve The Problem",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [920, 360]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "61fdb89f-dde5-4e2b-a4ae-013f12ad5090",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [400, 360],
+      "webhookId": "f6491b14-59ba-4161-9bda-7e35977a1ca4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Meta Llama 3.1 70B": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extract Relevant Numerical Information",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Llama 3.1 70B1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Step To Solve The Problem",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Llama 3.1 70B2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Final Answer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Routing Chat": {
+      "main": [
+        [
+          {
+            "node": "Routing Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Global Variables": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Different Model LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Multi Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Different Model LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Different Model LLM": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deepseek V3 Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Aggregator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Aggregator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Llama 3.1 70B3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Routing Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Routing Prompt",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Routing Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Main Function Prompt1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregator Agent": {
+      "main": [
+        [
+          {
+            "node": "Return Result1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Llama 3.1 70B4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Orchestrator Prompt",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Work Model LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Llama 3.1 70B5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Work Model LLM",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Work Model LLM": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Return Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qwen 2.5 Coder 32B": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context": {
+      "main": [
+        [
+          {
+            "node": "Generate Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Llama 3.1 70B6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Evaluate Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Evaluate Prompt",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Return Result2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Evaluate Prompt1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Prompt1": {
+      "main": [
+        [
+          {
+            "node": "Generate Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Routing Prompt": {
+      "main": [
+        [
+          {
+            "node": "Main Function Prompt1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Prompt": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta Llama 3.1 70B7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Environment AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "Environment AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Environment AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session ID": {
+      "main": [
+        [
+          {
+            "node": "Environment AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Prompt": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Prompt": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Relevant Numerical Information": {
+      "main": [
+        [
+          {
+            "node": "Step To Solve The Problem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Step To Solve The Problem": {
+      "main": [
+        [
+          {
+            "node": "Generate Final Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Extract Relevant Numerical Information",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "UTC",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "65fe4956-54f1-4898-b388-6688c5a096ed",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4221cc7208f142ff91856b22776eec81b71c256154ec8030569832c22d0c66d9"
+  },
+  "id": "HWTka19FWHnDKHA7",
+  "tags": [
+    {
+      "createdAt": "2025-01-28T07:53:03.821Z",
+      "updatedAt": "2025-01-28T07:53:03.821Z",
+      "id": "UmrR2LNV3n5EWSeP",
+      "name": "andynocode free"
+    }
+  ]
+}

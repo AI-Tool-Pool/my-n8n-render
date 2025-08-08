@@ -1,0 +1,557 @@
+{
+  "name": "12.2 **N8n Lead Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Lead generator",
+        "formDescription": "Input a job search and we will get you the leads.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Positions/keywords for search",
+              "placeholder": "Software Engineer"
+            },
+            {
+              "fieldLabel": "Country for search",
+              "placeholder": "\"AQ\", \"AR\", \"AU\", \"AT\", \"BH\"..."
+            },
+            {
+              "fieldLabel": "Location for search",
+              "placeholder": "New York (Optional)"
+            },
+            {
+              "fieldLabel": "Max items",
+              "fieldType": "number",
+              "placeholder": "10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "48001975-7153-4e61-907b-5958a2d9b205",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        820,
+        360
+      ],
+      "webhookId": "eda75315-a3f1-4953-b9a8-e96f20a65037"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "id": "23744440-002a-46c3-a11d-d66a7b1026b9",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        360
+      ],
+      "webhookId": "d4b36a31-5636-47c1-b417-8e5510acf120"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/acts/X037tcud0rIknwfI3/runs/{{ $json.data.id }}",
+        "options": {}
+      },
+      "id": "376472e5-5724-41c7-a3a0-6f7efe6635a0",
+      "name": "Status Polling",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f2e8f645-bc88-4299-9c36-4f27037f1b7d",
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "SUCCEEDED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4b65e11e-e442-4fe8-93ff-087719133451",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1660,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "people",
+        "options": {}
+      },
+      "id": "5908f5a9-f829-48c2-8a8c-06110f2f7ea6",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apollo.io/api/v1/mixed_people/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "person_seniorities[]",
+              "value": "c_suite"
+            },
+            {
+              "name": "q_keywords",
+              "value": "={{ $json.company }}"
+            },
+            {
+              "name": "contact_email_status[]",
+              "value": "verified"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "58d021ab-de83-4580-98b0-2f341102ca14",
+      "name": "Apollo People Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        680
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "kHpkwMksDocRrFy0",
+          "name": "Andy Apollo Account "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://server.smartlead.ai/api/v1/campaigns/1473062/leads",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"lead_list\": [\n\t\t{\n\t\t\t\"first_name\": \"{{ $('Get Emails From Apollo').item.json.person.first_name }}\",\n\t\t\t\"last_name\": \"{{ $('Get Emails From Apollo').item.json.person.last_name }}\",\n\t\t\t\"email\": \"{{ $('Get Emails From Apollo').item.json.person.email }}\",\n\t\t\t\"company_name\": \"{{ $('Get Emails From Apollo').item.json.person.organization.name }}\",\n\t\t\t\"website\": \"{{ $('Get Emails From Apollo').item.json.person.organization.website_url }}\",\n\t\t\t\"location\": \"{{ $('Get Emails From Apollo').item.json.person.country }}\",\n\t\t\t\"linkedin_profile\": \"{{ $('Get Emails From Apollo').item.json.person.linkedin_url }}\",\n\t\t\t\"custom_fields\": {\n              \"email_body\": {{ JSON.stringify($json.output.emailBody) }}\n            }\n\t\t}\n  ]\n}",
+        "options": {}
+      },
+      "id": "9c058cd2-9d6d-49a1-bc41-67e7404d2247",
+      "name": "Add To Smart Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2320,
+        680
+      ],
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "ewPet6TC7Z5W8QvG",
+          "name": "Smartlead Stanley Query Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/hMvNSpz3JnHgl5jkh/runs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"country\": \"{{ $json[\"Country for search\"] }}\",\n  \"followApplyRedirects\": false,\n  \"location\": \"{{ $json[\"Location for search\"] }}\",\n  \"maxItems\": {{ $json[\"Max items\"] }},\n  \"parseCompanyDetails\": false,\n  \"position\": \"{{ $json[\"Positions/keywords for search\"] }}\",\n  \"saveOnlyUniqueItems\": true\n} ",
+        "options": {}
+      },
+      "id": "a2b4582e-a231-4cb8-83a4-d43b9d699e70",
+      "name": "Apify Indeed Job Crawler",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        360
+      ],
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "EkT8rwXUSzaMnB28",
+          "name": "Apify Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apollo.io/api/v1/people/match",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "reveal_personal_emails",
+              "value": "true"
+            },
+            {
+              "name": "reveal_phone_number",
+              "value": "false"
+            },
+            {
+              "name": "id",
+              "value": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2ec92825-1d2a-43a4-be9f-65954cd8cf8b",
+      "name": "Get Emails From Apollo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1260,
+        680
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "kHpkwMksDocRrFy0",
+          "name": "Andy Apollo Account "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.millionverifier.com/api/v3",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.person.email }}"
+            },
+            {
+              "name": "timeout",
+              "value": "10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "853b3d89-dd97-4906-9c9c-d59165420fd7",
+      "name": "Verify Emails with MillionVerifier",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        680
+      ],
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "FhuWEFCR2JCGgivJ",
+          "name": "Andy Lo Millionverifier"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{ $json.data.defaultDatasetId }}/items",
+        "options": {}
+      },
+      "id": "0099236d-5082-4e37-8c62-6a617971c01c",
+      "name": "Get Company Names from Indeed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1880,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b96a1255-74ad-4f7b-aa9a-2431aeeece04",
+              "leftValue": "={{ $json.quality }}",
+              "rightValue": "good",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2846ac74-eb58-4782-8e68-3041c6e62d7b",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1680,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"emailBody\": \"Hi John, <br> How are you? <br> Best regards, <br> Andy\"\n\t\n}"
+      },
+      "id": "502c0bd9-750d-4cd4-8d9c-c60cecd6e526",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2100,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "model": "=deepseek-ai/DeepSeek-V3",
+        "options": {
+          "baseURL": "https://api.together.xyz/v1"
+        }
+      },
+      "id": "0aeb8ee2-c2d1-4374-b15f-06fa365e0398",
+      "name": "DeepSeek AI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        900
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "8lNusUpaZnvFPX9d",
+          "name": "Together AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional cold outreach specialist promoting an AI Agent community called \"Andy No Code\". You target audience are people in the sales and lead gen field. Andy No Code is a community that gathered lots of great minds in the AI SDR field. So you can try to pitch the prospect saying instead of hiring more Business Development members, we can make use of AI to enhance the existing productivity and Sales. And you are requested to draft customized cold emails for each of the prospect.\n\nThere are a few things that may help you to customize the email:\n\nProspect's First Name: {{ $('Get Emails From Apollo').item.json.person.first_name }}\nCompany Background: {{ $('Get Company Names from Indeed').item.json.description }}\nPosition they are hiring: {{ $('Get Company Names from Indeed').item.json.positionName }}\n\nEnd with my name Andy.\n\n- DO NOT provide the SUBJECT. I just need the email body.\n- DO NOT use \"/n\" for new line. Please use \"<br>\" for new line instead.\n- DO NOT draft a long email. Please draft a short and precise cold email starting with a quick question.",
+        "hasOutputParser": true
+      },
+      "id": "f9d37d8b-0d8e-44b3-aa3b-1dea1e75e9f1",
+      "name": "Cold Email Agent",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1900,
+        680
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Apify Indeed Job Crawler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Status Polling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Polling": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get Company Names from Indeed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Get Emails From Apollo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apollo People Search": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify Indeed Job Crawler": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Emails From Apollo": {
+      "main": [
+        [
+          {
+            "node": "Verify Emails with MillionVerifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Emails with MillionVerifier": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Company Names from Indeed": {
+      "main": [
+        [
+          {
+            "node": "Apollo People Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Cold Email Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Cold Email Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek AI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Cold Email Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cold Email Agent": {
+      "main": [
+        [
+          {
+            "node": "Add To Smart Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "840e4da5-5a4c-4275-8b14-fbd1bde26c53",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4221cc7208f142ff91856b22776eec81b71c256154ec8030569832c22d0c66d9"
+  },
+  "id": "UqnLvWDJMz3H5BOs",
+  "tags": []
+}

@@ -35,7 +35,6 @@ node_modules/
 npm-debug.log
 
 # Development and deployment scripts (not needed in container)
-scripts/
 check_health.sh
 export_workflows.sh
 import_workflows.sh

@@ -1,0 +1,693 @@
+{
+  "name": "Template 15 - Your Automated Job Search & Application AI Agent [No-code with n8n, LinkedIn, Deepseek & Perplexity]",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Save new job from RSS",
+        "height": 276.22941666653054,
+        "width": 2064.435009550496,
+        "color": 5
+      },
+      "id": "7a4e32ca-541f-4a7b-ac6d-9ff6dc303dbe",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [780, -60]
+    },
+    {
+      "parameters": {
+        "content": "## Job assistant AI Agent",
+        "height": 381.0972322327879,
+        "width": 1059.774641510238
+      },
+      "id": "959479aa-f870-4693-98fc-0961162510cf",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [780, 260]
+    },
+    {
+      "parameters": {
+        "url": "https://rss.app/feeds/XCBb0oUkRQuDcldq.xml",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "id": "e6716cc4-20f9-4e47-951c-99068ffb723f",
+      "name": "RSS Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [1360, 20]
+    },
+    {
+      "parameters": {
+        "maxItems": 25
+      },
+      "id": "37554575-2d6b-4f40-83cd-2b5f5b9ec7fe",
+      "name": "Limit",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [1540, 20]
+    },
+    {
+      "parameters": {},
+      "id": "a62c3483-d924-4667-8865-39a1c391b0bf",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [1160, 480],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Read All Job Records in A Google Sheets. It contains the following columns:\n\nTitle\t\nCompany Name\t\nCompany Email\t\nCompany Summary\t\nPublish Date\t\nLinkedin Link\t\nStatus",
+        "documentId": {
+          "__rl": true,
+          "value": "1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s",
+          "mode": "list",
+          "cachedResultName": "Tutorial 9.3 - Job Posts Record",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Linkedin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "0fd9aedb-e485-419b-860e-c6ca6d489bde",
+      "name": "Get Job Records",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [1300, 480],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Xk3JMNtcMACL1n7Y",
+          "name": "Google Sheets - andylo@proxa.cc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Retrieve my personal information, like name, address and contact number.",
+        "operation": "get",
+        "documentURL": "1bLgnM4XsN29YE22Bxj9yM6S7obPIaqdvQsytN6b5ZMk"
+      },
+      "id": "e81a1d82-4353-4096-9982-8f84c9d97473",
+      "name": "Personal Information",
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [1420, 480],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "oxK2inQnFhJIfo8Y",
+          "name": "Google Docs - andylo@proxa.cc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "375fe2ce-71dd-428d-accb-d1b8d30b0e32",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1020, 480],
+      "credentials": {
+        "openAiApi": {
+          "id": "B1xgcEjX0hRS28UV",
+          "name": "OpenAi Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "Current_Time",
+        "description": "Call this tool to retrieve current time.",
+        "jsCode": "const currentTime = new Date().toString();\nreturn currentTime;"
+      },
+      "id": "0418342f-f4b1-4d4b-a0bf-2c625a5365ab",
+      "name": "Time Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.1,
+      "position": [1520, 480]
+    },
+    {
+      "parameters": {
+        "name": "Send_Email",
+        "description": "Call this tool to send email. The input should be email, email title and email html message.",
+        "workflowId": {
+          "__rl": true,
+          "value": "nd0cNuLbcvOcpJdO",
+          "mode": "list",
+          "cachedResultName": "n8n Tutorial Video — Resume - Email Send Message"
+        },
+        "specifyInputSchema": true,
+        "jsonSchemaExample": "{\n    \"email\": \"samsek@proxa.cc\",\n    \"title\": \"Follow Up Email\",\n    \"html_message\": \"Hi there,<br/><br/>This is Andy from Proxa, an AI automation agency specializing in helping businesses like yours transform and scale through smart automation solutions.<br/><br/>We're passionate about optimizing operations, reducing costs, and driving growth by integrating cutting-edge AI technologies tailored to your needs.<br/><br/>Would you be interested in exploring how Proxa can revolutionize your business processes?<br/><br/>Feel free to reply to this email or contact us directly at andy@proxa.com.<br/><br/>Best regards,<br/>Andy<br/>Proxa - AI Automation Agency\"\n}\n"
+      },
+      "id": "6aa35ad7-3c33-45d6-8a6f-13b4535f9081",
+      "name": "Send Email",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.2,
+      "position": [1640, 480]
+    },
+    {
+      "parameters": {},
+      "id": "756dfcf1-a8c2-432a-b432-461317169f4b",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [820, 20]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"deepseek-chat\",\n  \"response_format\": {\n    \"type\": \"json_object\",\n    \"json_schema\": {\n      \"name\": \"company_details\",\n      \"schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"Querying HR Email\": {\n            \"type\": \"string\"\n          },\n          \"Comapny Name\": {\n            \"type\": \"string\"\n          }\n        },\n        \"required\": [\n          \"Querying HR Email\",\n          \"Comapny Name\"\n        ],\n        \"additionalProperties\": false\n      },\n      \"strict\": true\n    }\n  },\n  \"messages\": [\n    {\"role\": \"system\", \"content\": {{\nJSON.stringify(`You are a Google Search Expert. Please convert this job title to natural language on querying the following 3 items: 1) HR email of the company, 2) the company Name and 3) the company summary.\nReturn in JSON format:\n{\n  \"Natural Language Query\": \"string\",\n  \"Company Name\": \"string\",\n  \"Company Summary\" : \"string\"\n}`)\n}}\n    },\n    {\"role\": \"user\", \"content\": \"{{ $json.title }}\"}\n  ],\n  \"stream\": false\n}",
+        "options": {}
+      },
+      "id": "d2105a03-0760-4953-80b1-5304f697d7c6",
+      "name": "Convert to JSON string",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1720, 20],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Dkr5uVHPbgO4n8uI",
+          "name": "Deepseek API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a job hunting assistant. Retrieve data from a company and return the mail. If email does not exist, return \\\"N/A\\\". Return Email or N/A only, without any other information.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify($json.choices[0].message.content['Natural Language Query']) }}\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "d9bdbe88-0422-47f9-b835-838178fdbfed",
+      "name": "Perplexity Get Email and Contact Number",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2060, 20],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YQt31pOrylWQ7F10",
+          "name": "Perplexity"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "89474f66-c538-4fd1-9a42-0d154b1e9e92",
+              "leftValue": "={{ $json.choices[0].message.content }}",
+              "rightValue": "N/A",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "f19c7651-cd80-4030-98e0-50cbf9e847fd",
+      "name": "If Email Exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2400, 20]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst updatedItems = items.map((item) => {\n  const content = item?.json?.choices[0]?.message?.content;\n  try {\n    const contentJson = JSON.parse(content);\n    item.json.choices[0].message.content = contentJson;\n  } catch (error) {\n    console.log(\"Error parsing content to JSON:\", error);\n  }\n  return item;\n});\nreturn updatedItems;"
+      },
+      "id": "050bd009-b48f-4e06-a4a8-bd118ae6d599",
+      "name": "Convert JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1880, 20]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s",
+          "mode": "list",
+          "cachedResultName": "Tutorial 9.3 - Job Posts Record",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Linkedin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $('RSS Read').item.json.title }}",
+            "Company Name": "={{ $('Convert JSON').item.json.choices[0].message.content['Company Name'] }}",
+            "Company Email": "={{ $json.choices[0].message.content }}",
+            "Company Summary": "={{ $('Convert JSON').item.json.choices[0].message.content['Company Summary'] }}",
+            "Publish Date": "={{ $('RSS Read').item.json.pubDate }}",
+            "Linkedin Link": "={{ $('RSS Read').item.json.link }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Email",
+              "displayName": "Company Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Summary",
+              "displayName": "Company Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publish Date",
+              "displayName": "Publish Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Linkedin Link",
+              "displayName": "Linkedin Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "408b872a-7881-4929-9899-c5c1501914d2",
+      "name": "Save Contact",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [2720, 20],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Xk3JMNtcMACL1n7Y",
+          "name": "Google Sheets - andylo@proxa.cc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s",
+          "mode": "list",
+          "cachedResultName": "Tutorial 9.3 - Job Posts Record",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Linkedin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fxsbLhNcEMD13TpiCGIhf97NQkRBIjscwhXfPemFe7s/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "ec284a97-662c-40ef-9669-180caa1e59bf",
+      "name": "Get Previous Records",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1000, 20],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Xk3JMNtcMACL1n7Y",
+          "name": "Google Sheets - andylo@proxa.cc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "Company Email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cadcd082-df41-4b09-8a1d-7451f3191bef",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [1180, 20]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a71a5eb4-296f-4173-ac83-3adb3fe7f119",
+              "leftValue": "={{ $('Aggregate').item.json['Company Email'] }}",
+              "rightValue": "={{ $json.choices[0].message.content }}",
+              "operator": {
+                "type": "array",
+                "operation": "notContains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e04bfe0e-2914-49b8-8210-b8a10a43087a",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [2580, 20]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n\nconst result = items.map((item) => {\n  const email = item?.json?.choices[0]?.message?.content;\n  if (email === \"N/A\" || emailPattern.test(email)) {\n    item.json.choices[0].message.content = email;\n  } else {\n    item.json.choices[0].message.content = \"N/A\";\n  }\n  return item;\n});\n\nreturn result;\n"
+      },
+      "id": "61c56872-9c76-4295-abb8-8ccf412bfc5c",
+      "name": "Retrieve Email Address",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2240, 20]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ae64dbf9-5ef1-49db-a93e-0cc5831cdeaf",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [820, 340],
+      "webhookId": "6eed6645-7309-44ec-a06b-d6111de29e67"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful job application assistant. \n\nYou will use the following tools to perform specific tasks:\n\n1. Get Job Record from Google Sheet\nYou can get relevant data in the following columns:\nTitle\t\nCompany Name\t\nCompany Email\t\nCompany Summary\t\nPublish Date\t\nLinkedin Link\t\nStatus\n\n2. Send email\n- Please use the following cover letter template, here is a cover letter format example.\n- Please customize each cover letter based on the company description and my own experience and skills set (can be found in the \"Personal Information\" tool )\n\n\"Andy Lo\n+852 91320642\nandylo@proxa.cc\n{{new Date().toLocaleDateString(\"en-US\", { year: \"numeric\", month: \"long\", day: \"numeric\" })}}\n\nDear Recruitment Manager,\n\nI'm excited to be applying for the Web Developer position at ABC Limited. I've been programming websites and using CSS to create user-friendly experiences since I was in sixth form, so it's long been a passion of mine. I've also been intrigued by your company ever since it won Most Innovative at the National Web Development Awards two years ago. I strive to stay on the cutting-edge of web design and development, so when I saw this job posting, I knew I had to apply.\n\nDuring my previous role at Proxa, I built a website completely from scratch for a recently rebranded business, both ahead of schedule and within budget. I started by gathering requirements from my clients and holding a focus group to perform user research. My favourite part about web design is building a solution that impresses the client and meets the needs of users and customers. My new website was responsive, lightning fast, and included the latest e-commerce features. After launch, I continued to lead optimisation efforts. Through A/B testing, I improved the click-through rate by 10% and reduced the bounce rate on the website's landing page by 35%. As your Web Developer, I would bring these skills to develop websites that exceed the expectations of clients and customers, and drive real business results.\n\nOne of the factors that really attracted me to this role is that Proxa values giving back to the community. In my spare time, I run free web development workshops for at-risk teens. In these workshops, I teach them the basics of HTML/CSS and JavaScript and serve as a mentor. As I grow in my career, applying my skills to help others and make an impact on the world becomes more important—I believe this role would give me that opportunity.\n\nThank you for your consideration and time. I'm looking forward to learning more details about the position and company!\n\nSincerely,\nAndy Lo\"\n\n3. Personal Information\nIt contains my personal information, like my email, contact number, experience.\nThe information can be used for customizing cover letters."
+        }
+      },
+      "id": "e570232b-b098-4be9-80b1-8e9eabbd9fc4",
+      "name": "Job Assistant Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [1080, 340]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Convert to JSON string",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Job Assistant Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Job Records": {
+      "ai_tool": [
+        [
+          {
+            "node": "Job Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Personal Information": {
+      "ai_tool": [
+        [
+          {
+            "node": "Job Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Job Assistant Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Time Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Job Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Job Assistant Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Test workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get Previous Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to JSON string": {
+      "main": [
+        [
+          {
+            "node": "Convert JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Get Email and Contact Number": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Email Address",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Email Exist": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert JSON": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Get Email and Contact Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Previous Records": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Save Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Email Address": {
+      "main": [
+        [
+          {
+            "node": "If Email Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Job Assistant Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2d93925e-878c-47e7-b828-7fa9806bdbb4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4221cc7208f142ff91856b22776eec81b71c256154ec8030569832c22d0c66d9"
+  },
+  "id": "S5QGMGHw00cg6WvY",
+  "tags": [
+    {
+      "createdAt": "2025-01-28T07:53:03.821Z",
+      "updatedAt": "2025-01-28T07:53:03.821Z",
+      "id": "UmrR2LNV3n5EWSeP",
+      "name": "andynocode free"
+    }
+  ]
+}

@@ -22,28 +22,24 @@ RUN apk add --no-cache --virtual .build-deps \
     g++ \
     && rm -rf /var/cache/apk/*
 
-# Configure npm to reduce warnings and output
-RUN npm config set loglevel error \
-    && npm config set fund false \
-    && npm config set audit false \
-    && npm config set progress false
+# Copy .npmrc for consistent npm configuration
+COPY .npmrc ./
 
 # Install n8n with optimized flags to minimize warnings
-RUN npm install -g n8n@1.105.4 semver \
-    --no-fund \
-    --no-audit \
-    --silent \
-    --no-progress \
-    --legacy-peer-deps \
+RUN npm install -g semver@7.6.3 \
+    && npm install -g n8n@1.105.4 \
     && npm cache clean --force \
     && apk del .build-deps
 
 # Copy application files and make them executable
 COPY entrypoint.sh ./entrypoint.sh
 COPY config/ ./config/
+COPY scripts/ ./scripts/
+COPY workflows/ ./workflows/
+COPY credentials/ ./credentials/
 
 # Make scripts executable in Alpine stage where shell is available
-RUN chmod +x ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh ./scripts/*.sh
 
 # Stage 3: Security scanner (optional but recommended)
 FROM deps AS security-scan
@@ -62,13 +58,12 @@ RUN apk add --no-cache \
     bash \
     openssl \
     postgresql-client \
+    sqlite \
     npm \
     && rm -rf /var/cache/apk/*
 
-# Configure npm for production (reduce noise)
-RUN npm config set loglevel error \
-    && npm config set fund false \
-    && npm config set audit false
+# Copy .npmrc for consistent npm configuration in runtime
+COPY .npmrc ./
 
 # Set production environment variables optimized for FREE TIER
 ENV NODE_ENV=production \
@@ -110,6 +105,9 @@ COPY --from=deps /usr/local/bin/n8n /usr/local/bin/n8n
 # Copy application files with correct node:node ownership
 COPY --from=deps --chown=node:node /app/entrypoint.sh ./entrypoint.sh
 COPY --from=deps --chown=node:node /app/config/ ./config/
+COPY --from=deps --chown=node:node /app/scripts/ ./scripts/
+COPY --from=deps --chown=node:node /app/workflows/ ./workflows/
+COPY --from=deps --chown=node:node /app/credentials/ ./credentials/
 
 # Create necessary directories with proper permissions for node user
 RUN mkdir -p /home/node/.n8n \
