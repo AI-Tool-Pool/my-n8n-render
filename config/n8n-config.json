@@ -1,0 +1,146 @@
+{
+  "database": {
+    "type": "postgresdb",
+    "postgresdb": {
+      "host": "${DB_POSTGRES_HOST}",
+      "port": "${DB_POSTGRES_PORT}",
+      "database": "${DB_POSTGRES_DB}",
+      "username": "${DB_POSTGRES_USER}",
+      "password": "${DB_POSTGRES_PASSWORD}",
+      "ssl": {
+        "enabled": true,
+        "rejectUnauthorized": false
+      },
+      "poolSize": 3,
+      "connectionTimeoutMillis": 30000,
+      "idleTimeoutMillis": 300000,
+      "maxUses": 7500
+    }
+  },
+  "cache": {
+    "backend": "memory",
+    "memory": {
+      "maxSize": 50,
+      "ttl": 3600
+    }
+  },
+  "queue": {
+    "mode": "memory",
+    "bull": {
+      "redis": {
+        "host": "disabled"
+      }
+    }
+  },
+  "executions": {
+    "mode": "queue",
+    "timeout": 900,
+    "maxTimeout": 3600,
+    "saveDataOnError": "all",
+    "saveDataOnSuccess": "none",
+    "saveDataManualExecutions": false,
+    "pruneData": true,
+    "pruneDataMaxAge": 168,
+    "pruneDataTimeout": 3600
+  },
+  "workflows": {
+    "callerPolicyDefaultOption": "any",
+    "defaultName": "My workflow"
+  },
+  "credentials": {
+    "overwrite": {
+      "endpoint": ""
+    }
+  },
+  "userManagement": {
+    "disabled": false,
+    "emails": {
+      "mode": "smtp",
+      "smtp": {
+        "host": "${SMTP_HOST:-}",
+        "port": "${SMTP_PORT:-587}",
+        "secure": "${SMTP_SECURE:-false}",
+        "auth": {
+          "user": "${SMTP_USER:-}",
+          "pass": "${SMTP_PASS:-}"
+        }
+      }
+    },
+    "jwtSecret": "${JWT_SECRET}",
+    "sessionSecret": "${SESSION_SECRET}"
+  },
+  "nodes": {
+    "exclude": [
+      "n8n-nodes-base.executeCommand",
+      "n8n-nodes-base.filesReadWrite"
+    ],
+    "errorTriggerType": "n8n-nodes-base.errorTrigger"
+  },
+  "security": {
+    "excludeEndpoints": "none",
+    "basicAuth": {
+      "active": false
+    },
+    "jwtAuth": {
+      "active": true,
+      "jwtHeader": "authorization",
+      "jwtHeaderValuePrefix": "Bearer",
+      "jwksUri": "",
+      "jwtIssuer": "",
+      "jwtAudience": "",
+      "userIdClaim": "sub",
+      "userEmailClaim": "email"
+    }
+  },
+  "endpoints": {
+    "rest": "rest",
+    "webhook": "webhook",
+    "webhookWaiting": "webhook-waiting",
+    "webhookTest": "webhook-test"
+  },
+  "externalFrontendHooks": "",
+  "externalHookFiles": "",
+  "logs": {
+    "level": "${LOG_LEVEL:-info}",
+    "output": "console",
+    "file": {
+      "fileCountMax": 3,
+      "fileSizeMax": 16,
+      "location": "/tmp/n8n.log"
+    }
+  },
+  "push": {
+    "backend": "websocket"
+  },
+  "metrics": {
+    "enable": false
+  },
+  "deployment": {
+    "type": "default"
+  },
+  "versionNotifications": {
+    "enabled": false
+  },
+  "templates": {
+    "enabled": true,
+    "host": "https://api.n8n.io/api/"
+  },
+  "binaryData": {
+    "mode": "filesystem",
+    "availableModes": "filesystem",
+    "localStoragePath": "/tmp/n8n-binary-data",
+    "binaryDataTTL": 60,
+    "persistedBinaryDataTTL": 1440
+  },
+  "publicApi": {
+    "disabled": false,
+    "path": "api",
+    "swaggerUiDisabled": false
+  },
+  "license": {
+    "serverUrl": "https://license.n8n.io/v1",
+    "autoRenewal": {
+      "enabled": false
+    }
+  }
+}
