@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-# Multi-stage production-ready n8n Dockerfile with security hardening
+# Optimized n8n Dockerfile for Render free tier with minimal warnings
 
 # Stage 1: Base dependencies with security scanning
 FROM node:20-alpine AS base
@@ -22,8 +22,19 @@ RUN apk add --no-cache --virtual .build-deps \
     g++ \
     && rm -rf /var/cache/apk/*
 
-# Install n8n with production optimizations and required dependencies
-RUN npm install -g n8n@latest semver \
+# Configure npm to reduce warnings and output
+RUN npm config set loglevel error \
+    && npm config set fund false \
+    && npm config set audit false \
+    && npm config set progress false
+
+# Install n8n with optimized flags to minimize warnings
+RUN npm install -g n8n@1.105.4 semver \
+    --no-fund \
+    --no-audit \
+    --silent \
+    --no-progress \
+    --legacy-peer-deps \
     && npm cache clean --force \
     && apk del .build-deps
 
@@ -53,6 +64,11 @@ RUN apk add --no-cache \
     postgresql-client \
     npm \
     && rm -rf /var/cache/apk/*
+
+# Configure npm for production (reduce noise)
+RUN npm config set loglevel error \
+    && npm config set fund false \
+    && npm config set audit false
 
 # Set production environment variables optimized for FREE TIER
 ENV NODE_ENV=production \
@@ -87,9 +103,9 @@ ENV NODE_ENV=production \
     WEBHOOK_TUNNEL_URL="" \
     GENERIC_TIMEZONE=UTC
 
-# Install n8n directly in runtime stage to ensure all dependencies are properly resolved
-RUN npm install -g n8n@latest \
-    && npm cache clean --force
+# Copy n8n installation from deps stage instead of reinstalling
+COPY --from=deps /usr/local/lib/node_modules/n8n /usr/local/lib/node_modules/n8n
+COPY --from=deps /usr/local/bin/n8n /usr/local/bin/n8n
 
 # Copy application files with correct node:node ownership
 COPY --from=deps --chown=node:node /app/entrypoint.sh ./entrypoint.sh

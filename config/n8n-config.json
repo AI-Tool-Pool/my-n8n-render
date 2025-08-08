@@ -100,21 +100,6 @@
   },
   "externalFrontendHooks": "",
   "externalHookFiles": "",
-  "logs": {
-    "level": "${LOG_LEVEL:-warn}",
-    "output": "console",
-    "file": {
-      "fileCountMax": 2,
-      "fileSizeMax": 8,
-      "location": "/tmp/n8n.log"
-    }
-  },
-  "push": {
-    "backend": "websocket"
-  },
-  "metrics": {
-    "enable": false
-  },
   "deployment": {
     "type": "default"
   },
@@ -124,13 +109,6 @@
   "templates": {
     "enabled": true,
     "host": "https://api.n8n.io/api/"
-  },
-  "binaryData": {
-    "mode": "filesystem",
-    "availableModes": "filesystem",
-    "localStoragePath": "/tmp/n8n-binary-data",
-    "binaryDataTTL": 30,
-    "persistedBinaryDataTTL": 720
   },
   "publicApi": {
     "disabled": false,

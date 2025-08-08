@@ -28,30 +28,24 @@ echo "=================================="
 WORKFLOW_DIR="/app/workflows"
 CREDENTIAL_DIR="/app/credentials"
 
-# Import workflows if they exist
+# Import workflows if they exist (with reduced verbosity)
 if [ -d "$WORKFLOW_DIR" ] && [ -n "$(ls -A "$WORKFLOW_DIR" 2>/dev/null)" ]; then
     echo "📁 Importing workflows..."
-    for file in "$WORKFLOW_DIR"/*.json; do
-        if [ -f "$file" ]; then
-            echo "  → $(basename "$file")"
-        fi
-    done
-    n8n import:workflow --input="$WORKFLOW_DIR" --separate
+    workflow_count=$(ls -1 "$WORKFLOW_DIR"/*.json 2>/dev/null | wc -l)
+    echo "  → Found $workflow_count workflow files"
+    n8n import:workflow --input="$WORKFLOW_DIR" --separate >/dev/null 2>&1
     echo "✅ Workflows imported successfully"
 else
     echo "📁 No workflows found, skipping import"
 fi
 
-# Import credentials if they exist
+# Import credentials if they exist (with reduced verbosity)
 if [ -d "$CREDENTIAL_DIR" ] && [ -n "$(ls -A "$CREDENTIAL_DIR" 2>/dev/null)" ]; then
     echo "🔐 Importing credentials..."
-    for file in "$CREDENTIAL_DIR"/*.json; do
-        if [ -f "$file" ]; then
-            echo "  → $(basename "$file")"
-        fi
-    done
+    credential_count=$(ls -1 "$CREDENTIAL_DIR"/*.json 2>/dev/null | wc -l)
+    echo "  → Found $credential_count credential files"
     # Use the correct n8n command for importing credentials
-    n8n import:credentials --input="$CREDENTIAL_DIR" --separate
+    n8n import:credentials --input="$CREDENTIAL_DIR" --separate >/dev/null 2>&1
     echo "✅ Credentials imported successfully"
 else
     echo "🔐 No credentials found, skipping import"
@@ -63,8 +57,8 @@ echo "⚙️  Loading n8n configuration..."
 # Set n8n configuration file path
 export N8N_CONFIG_FILES="/app/config/n8n-config.json"
 
-# Free tier optimizations
-export N8N_METRICS_ENABLE="false"
+# Free tier optimizations - use environment variables instead of config file
+export N8N_METRICS="false"
 export N8N_VERSION_NOTIFICATIONS_ENABLED="false"
 export N8N_DIAGNOSTICS_ENABLED="false"
 export N8N_PERSONALIZATION_ENABLED="false"
@@ -78,17 +72,18 @@ export N8N_QUEUE_MODE="memory"
 export N8N_USER_MANAGEMENT_JWT_SECRET="${JWT_SECRET:-$(openssl rand -hex 32)}"
 export N8N_SESSION_SECRET="${SESSION_SECRET:-$(openssl rand -hex 32)}"
 
-# Execution limits for free tier
+# Execution limits for free tier - use environment variables
 export N8N_EXECUTIONS_TIMEOUT="600"
 export N8N_EXECUTIONS_MAX_TIMEOUT="1200"
 export N8N_EXECUTIONS_DATA_PRUNE="true"
 export N8N_EXECUTIONS_DATA_MAX_AGE="72"
 
-# Binary data cleanup for storage efficiency
+# Binary data cleanup for storage efficiency - use environment variables
+export N8N_BINARY_DATA_MODE="filesystem"
 export N8N_BINARY_DATA_TTL="30"
 export N8N_PERSISTED_BINARY_DATA_TTL="720"
 
-# Log configuration
+# Log configuration - use environment variables
 export N8N_LOG_LEVEL="${LOG_LEVEL:-warn}"
 export N8N_LOG_OUTPUT="console"
 
