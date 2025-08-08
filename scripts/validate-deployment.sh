@@ -42,7 +42,7 @@ validate_warning() {
 
 # Check 1: Dockerfile compatibility
 echo -e "\n${BLUE}📋 Dockerfile Validation${NC}"
-if grep -q "node:18-alpine" Dockerfile && grep -q "bash" Dockerfile && grep -q "curl" Dockerfile; then
+if grep -q "node:20-alpine" Dockerfile && grep -q "bash" Dockerfile && grep -q "curl" Dockerfile; then
     validate_check 0 "Dockerfile uses Alpine with shell support"
 else
     validate_check 1 "Dockerfile missing essential runtime dependencies"
