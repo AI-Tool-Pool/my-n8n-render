@@ -49,6 +49,7 @@ RUN apk add --no-cache \
     tzdata \
     curl \
     bash \
+    openssl \
     postgresql-client \
     && rm -rf /var/cache/apk/*
 
@@ -85,8 +86,8 @@ ENV NODE_ENV=production \
     WEBHOOK_TUNNEL_URL="" \
     GENERIC_TIMEZONE=UTC
 
-# Copy n8n installation from deps stage
-COPY --from=deps /usr/local/lib/node_modules/n8n /usr/local/lib/node_modules/n8n
+# Copy n8n installation from deps stage and ensure all dependencies are available
+COPY --from=deps /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --from=deps /usr/local/bin/n8n /usr/local/bin/n8n
 
 # Copy application files with correct node:node ownership
