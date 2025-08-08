@@ -15,19 +15,23 @@ services:
   plan: free
   envVars:
   - key: N8N_HOST
-    sync: false
+    value: "0.0.0.0"
   - key: N8N_PORT
-    sync: false
+    value: "5678"
+  - key: PORT
+    value: "5678"
   - key: N8N_METRICS_ENABLED
-    sync: false
+    value: "false"
   - key: N8N_BASIC_AUTH_PASSWORD
-    sync: false
+    generateValue: true
   - key: N8N_BASIC_AUTH_USER
-    sync: false
+    value: "admin"
   - key: N8N_BASIC_AUTH_ACTIVE
-    sync: false
+    value: "true"
   - key: N8N_ENCRYPTION_KEY
-    sync: false
+    generateValue: true
+  - key: WEBHOOK_URL
+    value: "https://n8n-gitops-engine.onrender.com"
   - key: DB_TYPE
     value: postgresdb
   - key: DB_POSTGRESDB_HOST
@@ -55,32 +59,51 @@ services:
   - key: DB_POSTGRESDB_SCHEMA
     value: public
   - key: EXECUTIONS_DATA_SAVE_ON_ERROR
-    sync: false
+    value: "all"
   - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
-    sync: false
+    value: "none"
   - key: EXECUTIONS_DATA_MAX_AGE
-    sync: false
+    value: "72"
   - key: EXECUTIONS_DATA_PRUNE
-    sync: false
+    value: "true"
+  - key: EXECUTIONS_TIMEOUT
+    value: "600"
+  - key: EXECUTIONS_TIMEOUT_MAX
+    value: "1200"
   - key: N8N_LOG_LEVEL
-    sync: false
+    value: "warn"
   - key: TZ
-    sync: false
+    value: "UTC"
   - key: GENERIC_TIMEZONE
-    sync: false
+    value: "UTC"
   - key: N8N_RUNNERS_ENABLED
-    sync: false
-  - key: N8N_BASIC_AUTH_ACTIVE
-    sync: false
-  - key: N8N_ENCRYPTION_KEY
-    sync: false
-  - key: WEBHOOK_URL
-    sync: false
-  - key: PORT
-    sync: false
+    value: "false"
+  - key: N8N_TEMPLATES_ENABLED
+    value: "true"
+  - key: N8N_ONBOARDING_FLOW_DISABLED
+    value: "true"
+  - key: N8N_HIRING_BANNER_ENABLED
+    value: "false"
+  - key: N8N_PERSONALIZATION_ENABLED
+    value: "false"
+  - key: N8N_VERSION_NOTIFICATIONS_ENABLED
+    value: "false"
+  - key: N8N_DIAGNOSTICS_ENABLED
+    value: "false"
+  - key: N8N_BINARY_DATA_MODE
+    value: "filesystem"
+  - key: N8N_BINARY_DATA_TTL
+    value: "30"
+  - key: N8N_PERSISTED_BINARY_DATA_TTL
+    value: "720"
+  - key: N8N_CACHE_BACKEND
+    value: "memory"
+  - key: NODE_OPTIONS
+    value: "--max-old-space-size=400 --max-http-header-size=81920"
   region: oregon
-  dockerCommand: docker run -p 5678:5678
+  dockerCommand: ./entrypoint.sh
   dockerContext: .
   dockerfilePath: ./Dockerfile
+  healthCheckPath: /
   autoDeployTrigger: commit
 version: "1"

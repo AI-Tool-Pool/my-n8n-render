@@ -35,9 +35,14 @@
       ],
       "credentials": {
         "hubspotApi": {
-          "name": "HubSpot API",
-          "apiKey": "YOUR_HUBSPOT_API_KEY"
+          "id": "hubspot_standard",
+          "name": "HubSpot API"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     },
     {
@@ -67,9 +72,14 @@
       ],
       "credentials": {
         "mailchimpApi": {
-          "name": "Mailchimp API",
-          "apiKey": "YOUR_MAILCHIMP_API_KEY"
+          "id": "mailchimp_standard",
+          "name": "Mailchimp API"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     },
     {
@@ -99,9 +109,14 @@
       ],
       "credentials": {
         "quickBooksOAuth2Api": {
-          "name": "QuickBooks OAuth2",
-          "oauthTokenData": {}
+          "id": "quickbooks_standard",
+          "name": "QuickBooks OAuth2"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     },
     {
@@ -233,9 +248,14 @@
       ],
       "credentials": {
         "hubspotApi": {
-          "name": "HubSpot API",
-          "apiKey": "YOUR_HUBSPOT_API_KEY"
+          "id": "hubspot_standard",
+          "name": "HubSpot API"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     },
     {
@@ -287,9 +307,14 @@
       ],
       "credentials": {
         "mailchimpApi": {
-          "name": "Mailchimp API",
-          "apiKey": "YOUR_MAILCHIMP_API_KEY"
+          "id": "mailchimp_standard",
+          "name": "Mailchimp API"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     },
     {
@@ -348,9 +373,14 @@
       ],
       "credentials": {
         "quickBooksOAuth2Api": {
-          "name": "QuickBooks OAuth2",
-          "oauthTokenData": {}
+          "id": "quickbooks_standard",
+          "name": "QuickBooks OAuth2"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     },
     {
@@ -395,9 +425,14 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "name": "Google Sheets OAuth2",
-          "oauthTokenData": {}
+          "id": "google_sheets_standard",
+          "name": "Google Sheets OAuth2"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     }
   ],
@@ -622,7 +657,13 @@
     }
   },
   "active": true,
-  "settings": {},
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "timeout": 600,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
   "versionId": "6",
   "id": "6",
   "meta": {

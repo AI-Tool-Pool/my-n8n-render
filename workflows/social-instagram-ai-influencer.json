@@ -1,5 +1,5 @@
 {
-  "name": "My workflow 14",
+  "name": "Instagram AI Influencer - Free Tier Optimized",
   "nodes": [
     {
       "parameters": {
@@ -151,8 +151,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -285,8 +285,8 @@
       "webhookId": "03a0b1ff-a665-4657-9fa2-e43aaa7e59ad",
       "credentials": {
         "gmailOAuth2": {
-          "id": "oejgkhJaqXMO3oAP",
-          "name": "Gmail account real"
+          "id": "Gmail-OAuth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -331,8 +331,8 @@
       "webhookId": "08e878d2-3f61-45b5-9b90-e06f96f632ad",
       "credentials": {
         "gmailOAuth2": {
-          "id": "oejgkhJaqXMO3oAP",
-          "name": "Gmail account real"
+          "id": "Gmail-OAuth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -363,8 +363,8 @@
       "name": "Save monthly plan",
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -406,8 +406,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -471,8 +471,8 @@
       "webhookId": "03a0b1ff-a665-4657-9fa2-e43aaa7e59ad",
       "credentials": {
         "gmailOAuth2": {
-          "id": "oejgkhJaqXMO3oAP",
-          "name": "Gmail account real"
+          "id": "Gmail-OAuth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -517,8 +517,8 @@
       "webhookId": "08e878d2-3f61-45b5-9b90-e06f96f632ad",
       "credentials": {
         "gmailOAuth2": {
-          "id": "oejgkhJaqXMO3oAP",
-          "name": "Gmail account real"
+          "id": "Gmail-OAuth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -606,8 +606,8 @@
       "name": "Save weekly plan",
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -676,8 +676,8 @@
       "name": "Generate image with OpenAI",
       "credentials": {
         "openAiApi": {
-          "id": "tGvJRP2th9CbI2oq",
-          "name": "OpenAi account 2"
+          "id": "OpenAI-API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -850,8 +850,8 @@
       "name": "Facebook Graph API",
       "credentials": {
         "facebookGraphApi": {
-          "id": "6QYA8nXTfX9mWQr4",
-          "name": "Facebook Graph account"
+          "id": "Facebook-Graph-API",
+          "name": "Facebook Graph API"
         }
       }
     },
@@ -898,8 +898,8 @@
       "name": "Upload image to Supabase",
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -927,8 +927,8 @@
       "name": "Facebook Graph API1",
       "credentials": {
         "facebookGraphApi": {
-          "id": "6QYA8nXTfX9mWQr4",
-          "name": "Facebook Graph account"
+          "id": "Facebook-Graph-API",
+          "name": "Facebook Graph API"
         }
       }
     },
@@ -1022,8 +1022,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -1068,8 +1068,8 @@
       "webhookId": "08e878d2-3f61-45b5-9b90-e06f96f632ad",
       "credentials": {
         "gmailOAuth2": {
-          "id": "oejgkhJaqXMO3oAP",
-          "name": "Gmail account real"
+          "id": "Gmail-OAuth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -1100,8 +1100,8 @@
       "name": "Save quarterly plan",
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -1139,8 +1139,8 @@
       "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -1206,8 +1206,8 @@
       "name": "Save the post",
       "credentials": {
         "supabaseApi": {
-          "id": "bCDwKXFDdP3ZISkr",
-          "name": "Supabase - 2rum2room2"
+          "id": "Supabase-API",
+          "name": "Supabase API"
         }
       }
     },
@@ -1375,13 +1375,11 @@
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "gpt-4.1",
-          "mode": "list",
-          "cachedResultName": "gpt-4.1"
-        },
-        "options": {}
+        "model": "gpt-4o-mini",
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 1000
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -1390,8 +1388,8 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "tGvJRP2th9CbI2oq",
-          "name": "OpenAi account 2"
+          "id": "OpenAI-API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -1986,7 +1984,12 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "UTC",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "versionId": "71f8505c-e42c-4801-a527-296fc54ddd36",
   "meta": {

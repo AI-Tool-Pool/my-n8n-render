@@ -70,7 +70,7 @@ export N8N_DIAGNOSTICS_ENABLED="false"
 export N8N_PERSONALIZATION_ENABLED="false"
 
 # Memory and performance optimizations for free tier
-export NODE_OPTIONS="--max-old-space-size=256 --max-semi-space-size=32"
+export NODE_OPTIONS="--max-old-space-size=400 --max-semi-space-size=32"
 export N8N_CACHE_BACKEND="memory"
 export N8N_QUEUE_MODE="memory"
 
@@ -79,17 +79,17 @@ export N8N_USER_MANAGEMENT_JWT_SECRET="${JWT_SECRET:-$(openssl rand -hex 32)}"
 export N8N_SESSION_SECRET="${SESSION_SECRET:-$(openssl rand -hex 32)}"
 
 # Execution limits for free tier
-export N8N_EXECUTIONS_TIMEOUT="900"
-export N8N_EXECUTIONS_MAX_TIMEOUT="3600"
+export N8N_EXECUTIONS_TIMEOUT="600"
+export N8N_EXECUTIONS_MAX_TIMEOUT="1200"
 export N8N_EXECUTIONS_DATA_PRUNE="true"
-export N8N_EXECUTIONS_DATA_MAX_AGE="168"
+export N8N_EXECUTIONS_DATA_MAX_AGE="72"
 
 # Binary data cleanup for storage efficiency
-export N8N_BINARY_DATA_TTL="60"
-export N8N_PERSISTED_BINARY_DATA_TTL="1440"
+export N8N_BINARY_DATA_TTL="30"
+export N8N_PERSISTED_BINARY_DATA_TTL="720"
 
 # Log configuration
-export N8N_LOG_LEVEL="${LOG_LEVEL:-info}"
+export N8N_LOG_LEVEL="${LOG_LEVEL:-warn}"
 export N8N_LOG_OUTPUT="console"
 
 echo "✅ Configuration loaded successfully"

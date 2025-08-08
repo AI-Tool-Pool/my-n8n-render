@@ -7,6 +7,8 @@ RUN apk add --no-cache \
     dumb-init \
     ca-certificates \
     tzdata \
+    curl \
+    bash \
     && apk upgrade --no-cache
 
 # Stage 2: Dependencies installation with optimization
@@ -38,14 +40,24 @@ RUN chmod +x ./entrypoint.sh ./check_health.sh ./scripts/*.sh
 FROM deps AS security-scan
 RUN npm audit --audit-level=moderate || true
 
-# Stage 4: Production runtime with distroless
-FROM gcr.io/distroless/nodejs18-debian11 AS runtime
+# Stage 4: Production runtime optimized for Render free tier
+FROM node:18-alpine AS runtime
 WORKDIR /app
 
-# Set production environment variables
+# Install runtime dependencies for shell access and health checks
+RUN apk add --no-cache \
+    dumb-init \
+    ca-certificates \
+    tzdata \
+    curl \
+    bash \
+    postgresql-client \
+    && rm -rf /var/cache/apk/*
+
+# Set production environment variables optimized for FREE TIER
 ENV NODE_ENV=production \
-    NODE_OPTIONS="--max-old-space-size=1024 --max-http-header-size=81920" \
-    N8N_LOG_LEVEL=info \
+    NODE_OPTIONS="--max-old-space-size=400 --max-http-header-size=81920 --enable-source-maps=false" \
+    N8N_LOG_LEVEL=warn \
     N8N_LOG_OUTPUT=console \
     N8N_DISABLE_UI=false \
     N8N_PROTOCOL=http \
@@ -54,47 +66,53 @@ ENV NODE_ENV=production \
     N8N_METRICS=false \
     N8N_DIAGNOSTICS_ENABLED=false \
     N8N_VERSION_NOTIFICATIONS_ENABLED=false \
-    N8N_TEMPLATES_ENABLED=false \
+    N8N_TEMPLATES_ENABLED=true \
     N8N_ONBOARDING_FLOW_DISABLED=true \
     N8N_HIRING_BANNER_ENABLED=false \
     N8N_PERSONALIZATION_ENABLED=false \
     EXECUTIONS_PROCESS=main \
-    EXECUTIONS_MODE=regular \
-    EXECUTIONS_TIMEOUT=3600 \
-    EXECUTIONS_TIMEOUT_MAX=7200 \
+    EXECUTIONS_MODE=queue \
+    EXECUTIONS_TIMEOUT=600 \
+    EXECUTIONS_TIMEOUT_MAX=1200 \
     EXECUTIONS_DATA_PRUNE=true \
-    EXECUTIONS_DATA_MAX_AGE=168 \
+    EXECUTIONS_DATA_MAX_AGE=72 \
+    EXECUTIONS_DATA_SAVE_ON_ERROR=all \
+    EXECUTIONS_DATA_SAVE_ON_SUCCESS=none \
+    N8N_BINARY_DATA_MODE=filesystem \
+    N8N_BINARY_DATA_TTL=30 \
+    N8N_PERSISTED_BINARY_DATA_TTL=720 \
+    N8N_DEFAULT_BINARY_DATA_MODE=filesystem \
+    N8N_CACHE_BACKEND=memory \
+    N8N_DISABLE_PRODUCTION_MAIN_PROCESS=false \
     WEBHOOK_TUNNEL_URL="" \
     GENERIC_TIMEZONE=UTC
-
-# Copy dumb-init for proper signal handling
-COPY --from=base /usr/bin/dumb-init /usr/bin/dumb-init
 
 # Copy n8n installation from deps stage
 COPY --from=deps /usr/local/lib/node_modules/n8n /usr/local/lib/node_modules/n8n
 COPY --from=deps /usr/local/bin/n8n /usr/local/bin/n8n
 
-# Copy application files and make them executable in deps stage first
-COPY --from=deps --chown=nonroot:nonroot /app/entrypoint.sh ./entrypoint.sh
-COPY --from=deps --chown=nonroot:nonroot /app/check_health.sh ./check_health.sh
-COPY --from=deps --chown=nonroot:nonroot /app/scripts/ ./scripts/
-COPY --from=deps --chown=nonroot:nonroot /app/config/ ./config/
+# Copy application files with correct node:node ownership
+COPY --from=deps --chown=node:node /app/entrypoint.sh ./entrypoint.sh
+COPY --from=deps --chown=node:node /app/check_health.sh ./check_health.sh
+COPY --from=deps --chown=node:node /app/scripts/ ./scripts/
+COPY --from=deps --chown=node:node /app/config/ ./config/
 
-# Create necessary directories with proper permissions
-USER root
-RUN mkdir -p /home/nonroot/.n8n \
-    && mkdir -p /home/nonroot/.n8n/nodes \
-    && chown -R nonroot:nonroot /home/nonroot/.n8n
-USER nonroot
+# Create necessary directories with proper permissions for node user
+RUN mkdir -p /home/node/.n8n \
+    && mkdir -p /home/node/.n8n/nodes \
+    && chown -R node:node /home/node/.n8n
+
+# Switch to node user for security
+USER node
 
 # Set working directory for n8n data
-ENV N8N_USER_FOLDER=/home/nonroot/.n8n
+ENV N8N_USER_FOLDER=/home/node/.n8n
 
 # Expose n8n port
 EXPOSE 5678
 
-# Optimized health check with timeout and retries
-HEALTHCHECK --interval=60s --timeout=10s --start-period=120s --retries=3 \
+# Optimized health check with timeout and retries for free tier
+HEALTHCHECK --interval=120s --timeout=30s --start-period=180s --retries=2 \
   CMD ["/app/check_health.sh"]
 
 # Use dumb-init for proper signal handling and graceful shutdown

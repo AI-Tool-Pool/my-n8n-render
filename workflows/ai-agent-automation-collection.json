@@ -1,5 +1,5 @@
 {
-  "name": "Template 16 - These 5 AI Agent Workflows Will Change How You Automate EVERYTHING (No-Code!)",
+  "name": "AI Agent Collection - Optimized for Free Tier",
   "nodes": [
     {
       "parameters": {
@@ -15,9 +15,10 @@
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "8893f726-e0c1-43ce-ac3a-b80cea923069",
@@ -27,16 +28,17 @@
       "position": [600, 500],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "a4c796e6-5b45-4e51-a43d-f6b355d1a768",
@@ -46,16 +48,17 @@
       "position": [920, 500],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "3dbe4765-7201-4620-b22f-3095185a75da",
@@ -65,8 +68,8 @@
       "position": [1240, 500],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -224,8 +227,8 @@
       "position": [880, 1500],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -242,9 +245,10 @@
     },
     {
       "parameters": {
-        "model": "=deepseek-ai/DeepSeek-V3",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "7875f793-10b5-4fbf-b2fb-7207adf78695",
@@ -254,8 +258,8 @@
       "position": [1320, 1500],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -324,9 +328,10 @@
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "af268687-1a11-4f65-b655-9a65d140c0e4",
@@ -336,8 +341,8 @@
       "position": [740, 1000],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -366,8 +371,8 @@
       "position": [1060, 1000],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -403,9 +408,10 @@
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "9e3763d3-9cd4-4483-ac27-879ffc5f0420",
@@ -415,8 +421,8 @@
       "position": [580, 2040],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -444,9 +450,10 @@
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "37c4c1d7-e34f-4236-ac8a-65f7ac3e534b",
@@ -456,8 +463,8 @@
       "position": [1080, 2040],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -537,9 +544,10 @@
     },
     {
       "parameters": {
-        "model": "=Qwen/Qwen2.5-Coder-32B-Instruct",
+        "model": "deepseek-coder",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "92502753-f052-4268-b7ed-2d657db39797",
@@ -549,8 +557,8 @@
       "position": [720, 2580],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -576,9 +584,10 @@
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "e67976e4-c477-4106-9a89-d4dff468a3e3",
@@ -588,8 +597,8 @@
       "position": [1020, 2580],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -718,9 +727,10 @@
     },
     {
       "parameters": {
-        "model": "=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+        "model": "deepseek-chat",
         "options": {
-          "baseURL": "https://api.together.xyz/v1"
+          "baseURL": "https://api.deepseek.com/v1",
+          "timeout": 30000
         }
       },
       "id": "bc4f10ca-16fb-4348-a56a-bfbbfee112ca",
@@ -730,8 +740,8 @@
       "position": [900, 4020],
       "credentials": {
         "openAiApi": {
-          "id": "xK9nMqPaZnvFPX7r",
-          "name": "Together AI"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -746,8 +756,8 @@
       "position": [1080, 4020],
       "credentials": {
         "serpApi": {
-          "id": "k88YN9pcVWjKYVUx",
-          "name": "SerpAPI account"
+          "id": "SERP-API",
+          "name": "SERP API"
         }
       }
     },
@@ -1311,7 +1321,12 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "UTC",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "versionId": "65fe4956-54f1-4898-b388-6688c5a096ed",
   "meta": {

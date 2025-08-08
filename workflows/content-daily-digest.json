@@ -1,5 +1,5 @@
 {
-  "name": "My workflow 14",
+  "name": "Content Daily Digest",
   "nodes": [
     {
       "parameters": {
@@ -21,7 +21,17 @@
     {
       "parameters": {
         "url": "https://feeds.businessinsider.com/custom/all",
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "redirect": {
+            "followRedirects": true,
+            "maxRedirects": 3
+          },
+          "retry": {
+            "count": 2,
+            "delay": 1000
+          }
+        }
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.1,
@@ -32,7 +42,17 @@
     {
       "parameters": {
         "url": "http://rss.cnn.com/rss/money_topstories.rss",
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "redirect": {
+            "followRedirects": true,
+            "maxRedirects": 3
+          },
+          "retry": {
+            "count": 2,
+            "delay": 1000
+          }
+        }
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.1,
@@ -66,7 +86,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -78,7 +100,9 @@
       "parameters": {
         "aggregate": "aggregateAllItemData",
         "destinationFieldName": "news",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -104,7 +128,11 @@
           "mode": "list",
           "value": "gpt-4o-mini"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 4000,
+          "temperature": 0.7
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -113,8 +141,8 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "9z2BF40dqIRV3ovL",
-          "name": "OpenAI"
+          "id": "openai_api_key",
+          "name": "OpenAI API"
         }
       }
     },
@@ -130,7 +158,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -173,15 +203,17 @@
       "name": "OpenWeatherMap",
       "credentials": {
         "openWeatherMapApi": {
-          "id": "gTK9YmLWx133jqwn",
-          "name": "OpenWeatherMap"
+          "id": "openweathermap_api_key",
+          "name": "OpenWeatherMap API"
         }
       }
     },
     {
       "parameters": {
         "fieldToSplitOut": "list",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
@@ -212,7 +244,9 @@
           ],
           "combinator": "and"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
@@ -224,7 +258,9 @@
       "parameters": {
         "aggregate": "aggregateAllItemData",
         "destinationFieldName": "weather_forecast",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -250,7 +286,11 @@
           "mode": "list",
           "value": "gpt-4o-mini"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 4000,
+          "temperature": 0.7
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -259,8 +299,8 @@
       "name": "OpenAI Chat Model1",
       "credentials": {
         "openAiApi": {
-          "id": "9z2BF40dqIRV3ovL",
-          "name": "OpenAI"
+          "id": "openai_api_key",
+          "name": "OpenAI API"
         }
       }
     },
@@ -276,7 +316,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -305,7 +347,9 @@
           "readStatus": "unread",
           "receivedAfter": "={{ $now.minus(1, \"day\") }}"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
@@ -315,8 +359,8 @@
       "webhookId": "c485b21f-207d-4efb-9e85-566ff2e3de15",
       "credentials": {
         "gmailOAuth2": {
-          "id": "E1ofNfqugb4UykcT",
-          "name": "Gmail 2rum2room2"
+          "id": "gmail_oauth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -338,7 +382,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -350,7 +396,9 @@
       "parameters": {
         "aggregate": "aggregateAllItemData",
         "destinationFieldName": "emails",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -377,7 +425,11 @@
           "mode": "list",
           "value": "gpt-4o-mini"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 4000,
+          "temperature": 0.7
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -386,8 +438,8 @@
       "name": "OpenAI Chat Model2",
       "credentials": {
         "openAiApi": {
-          "id": "9z2BF40dqIRV3ovL",
-          "name": "OpenAI"
+          "id": "openai_api_key",
+          "name": "OpenAI API"
         }
       }
     },
@@ -413,7 +465,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -443,7 +497,9 @@
           "cachedResultName": "2rum2room2@gmail.com"
         },
         "timeMax": "={{ $now.plus({ days: 1 }) }}",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
@@ -475,7 +531,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -487,7 +545,9 @@
       "parameters": {
         "aggregate": "aggregateAllItemData",
         "destinationFieldName": "calendar_events",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -507,7 +567,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -545,7 +607,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
@@ -583,7 +647,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -595,7 +661,9 @@
       "parameters": {
         "promptType": "define",
         "text": "=\nCreate a daily digest from the data below.\nUse a personal, light-hearted tone (2nd person). \nUse the `send_daily_digest` tool to send the digest.\n\nThe elements of to include (from the source data)\n1. Weather forecast\n2. News\n3. Emails\n4. Calendar events\n\n<DataSource>\n<News>\n{{ $json.news }}\n</News>\n<WeatherForecast>\n{{ $json.weather_forecast }}\n</WeatherForecast>\n<Emails>\n{{ $json.emails }}\n</Emails>\n<CalendarEvents>\n{{ $json.calendar_events }}\n</CalendarEvents>\n</DataSource>\n\nMake sure to format the email as raw text with proper new lines, separating everything.\nDo not use any markdown - as it will be read on mobile. Don't use any bold, other styling.\n\nExample formating:\n\nHi there,\n\nToday's weather\n- forecast\n- clothing recommendations\n\nUnread emails\n- email 1\n- email 2\n\nToday's events\n- event 1\n- event 2\n\nLatest news\n\nCategory 1\n- news item 1\n\nCategory 2\n- news item 1\n\nHave a great day, Miri!",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
@@ -610,7 +678,11 @@
           "mode": "list",
           "value": "gpt-4o-mini"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 4000,
+          "temperature": 0.7
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -619,8 +691,8 @@
       "name": "OpenAI Chat Model3",
       "credentials": {
         "openAiApi": {
-          "id": "9z2BF40dqIRV3ovL",
-          "name": "OpenAI"
+          "id": "openai_api_key",
+          "name": "OpenAI API"
         }
       }
     },
@@ -630,7 +702,9 @@
         "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
         "emailType": "text",
         "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
@@ -640,8 +714,8 @@
       "webhookId": "162a213b-823b-4420-8c95-05e882822299",
       "credentials": {
         "gmailOAuth2": {
-          "id": "E1ofNfqugb4UykcT",
-          "name": "Gmail 2rum2room2"
+          "id": "gmail_oauth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -1061,7 +1135,13 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": {
+      "active": true
+    }
   },
   "versionId": "4110066c-8073-4e4d-a127-96077cb46794",
   "meta": {

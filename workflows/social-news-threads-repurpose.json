@@ -1,10 +1,15 @@
 {
-  "name": "Tutorial 1.4 - I Built an AI Agent to Auto-Repurpose News into Engaging Threads (100% Automated)",
+  "name": "[OPTIMIZED] Social News Threads Repurpose - Free Tier",
   "nodes": [
     {
       "parameters": {
         "url": "=https://graph.threads.net/access_token?grant_type=th_exchange_token&client_secret={{ $json.client_secret }}&access_token={{ $json.access_token }}",
-        "options": {}
+        "options": {
+          "timeout": 15000,
+          "retry": {
+            "maxTries": 2
+          }
+        }
       },
       "id": "f21561e4-7993-431e-a915-792db34e49cb",
       "name": "Exchange Long Credentials",
@@ -66,13 +71,13 @@
             {
               "id": "45ae74a0-7d74-4ca4-909b-276a63578442",
               "name": "access_token",
-              "value": "xxxxxxxxxx",
+              "value": "{{ $vars.exa_api_key }}",
               "type": "string"
             },
             {
               "id": "c3ad863b-e3e8-4258-bd29-f408c1bf900a",
               "name": "client_secret",
-              "value": "xxxxxxxxxx",
+              "value": "{{ $vars.exa_api_key }}",
               "type": "string"
             },
             {
@@ -160,7 +165,7 @@
             {
               "id": "c3ad863b-e3e8-4258-bd29-f408c1bf900a",
               "name": "client_secret",
-              "value": "xxxxxxxxxx",
+              "value": "{{ $vars.exa_api_key }}",
               "type": "string"
             }
           ]
@@ -703,9 +708,9 @@
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "gpt-4o",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4O"
+          "cachedResultName": "GPT-4O Mini"
         },
         "messages": {
           "values": [
@@ -718,7 +723,10 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 15000,
+          "maxTokens": 100
+        }
       },
       "id": "373dd4ed-abc6-4406-8b85-ece0e2f8f062",
       "name": "OpenAI",
@@ -845,7 +853,7 @@
             {
               "id": "0ed02e7c-db63-47e0-b5a8-1af91c57ac94",
               "name": "exa_credential",
-              "value": "xxxxxxxxxx",
+              "value": "{{ $vars.exa_api_key }}",
               "type": "string"
             }
           ]
@@ -1515,14 +1523,14 @@
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "gpt-4o",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4O"
+          "cachedResultName": "GPT-4O Mini"
         },
         "messages": {
           "values": [
             {
-              "content": "=You are a Twitter copywriter. Your task is to repurpose the user's article content into compelling Twitter posts.\n\nWorkflow:\n\n1. Assess the article for sufficient context and content to create a Twitter post. If inadequate, return false.\n2. Repurpose the article into a Twitter post:\nIf the repurposed post exceeds Twitter's maximum character limit, split it into a thread.\nFormatting:\n3a. For a single post, return the repurposed text directly.\nFor threads:\n3b. Start the first tweet with a thread indicator: (THREAD 🧵) 1/{total number of tweets}. End subsequent tweets with: 🧵 {current number}/{total number of tweets}.\nSeparate individual tweets with ----Thread----.\n\nTwitter Post Requirements:\n\nEach post must be less than 400 characters.\nInclude 1 hashtag relevant to the content.\nDo not include labels such as \"Output\" in your response.\nExamples:\n\nExample 1 - Not Enough Context:\nfalse\n\nExample 2 - Single Twitter Post:\nSo in less than 24 hours we got:\n\nGoogle unveiling a quantum chip that solves in 5 minutes what would take the best supercomputers 10 septillion(!) years.\nOpenAI launching Sora with almost photorealistic AI video quality.\nThe timeline is unreal.\n\nExample 3 - Multiple Twitter Threads:\n(THREAD 🧵) 1/2\nBREAKING: A public school teacher lost her job after refusing to let first graders use the restroom.\n\nMultiple kids peed themselves after the teacher revoked the entire class's right to use the restroom.\n\nThe teacher messaged parents blaming the victims.\n\nBuckle up\n----Thread----\nThe 1st grade teacher is Ashley Barrera.\nShe taught at Bartlett Elementary School in Conroe, Texas.\nShe's no longer employed by the district.\n🧵 2/2",
+              "content": "=You are a Twitter copywriter. Create engaging Twitter posts from articles. If content is insufficient, return 'false'. For long content, create threads using ----Thread---- separator. Keep posts under 280 characters with relevant hashtags.",
               "role": "system"
             },
             {
@@ -1530,7 +1538,10 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 15000,
+          "maxTokens": 150
+        }
       },
       "id": "cfe5b3ed-c5b3-47fb-8ac9-69407aa00769",
       "name": "Article Repurpose",
@@ -1545,14 +1556,14 @@
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "gpt-4o",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4O"
+          "cachedResultName": "GPT-4O Mini"
         },
         "messages": {
           "values": [
             {
-              "content": "=You are a helpful assistant that generates search queries based on category. There will be multiple category seperated by comma. Only generate one search query with one topic for today. Today's time {{ $now }}, text only without \"\" or ''",
+              "content": "=Generate one search query for today based on categories. Today: {{ $now }}. Return text only, no quotes.",
               "role": "system"
             },
             {
@@ -1560,7 +1571,10 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 10000,
+          "maxTokens": 50
+        }
       },
       "id": "ff7e5706-1720-4945-b962-39cf071a692b",
       "name": "Natural Language for News Retrival",

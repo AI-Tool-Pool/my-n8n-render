@@ -1,14 +1,17 @@
 {
-  "name": "My workflow 30",
+  "name": "[OPTIMIZED] AI Video - Hailuo Free Tier",
   "nodes": [
     {
       "parameters": {
         "model": {
           "__rl": true,
           "mode": "list",
-          "value": "gpt-4.1-mini"
+          "value": "gpt-4o-mini"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 1000
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -17,8 +20,8 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "tGvJRP2th9CbI2oq",
-          "name": "OpenAi account 2"
+          "id": "openai-api-key",
+          "name": "OpenAI API"
         }
       }
     },
@@ -50,8 +53,8 @@
       "name": "Generate image",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -99,8 +102,8 @@
       "name": "Start video generation",
       "credentials": {
         "httpBearerAuth": {
-          "id": "d1FwurOzJDxnxPrn",
-          "name": "MiniMax"
+          "id": "minimax-api-key",
+          "name": "MiniMax API"
         }
       }
     },
@@ -131,8 +134,8 @@
       "name": "Get image status",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -150,8 +153,8 @@
       "name": "Get image",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -169,8 +172,8 @@
       "name": "Get audio status",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -190,8 +193,8 @@
       "retryOnFail": true,
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -223,8 +226,8 @@
       "name": "Start merging videos",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -352,8 +355,8 @@
       "name": "Get merge videos status",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -371,8 +374,8 @@
       "name": "Get merged video",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },
@@ -530,8 +533,8 @@
           "name": "Postiz auth"
         },
         "httpBearerAuth": {
-          "id": "d1FwurOzJDxnxPrn",
-          "name": "MiniMax"
+          "id": "minimax-api-key",
+          "name": "MiniMax API"
         }
       }
     },
@@ -717,8 +720,8 @@
       "name": "Get the generated video",
       "credentials": {
         "httpBearerAuth": {
-          "id": "d1FwurOzJDxnxPrn",
-          "name": "MiniMax"
+          "id": "minimax-api-key",
+          "name": "MiniMax API"
         }
       }
     },
@@ -750,8 +753,8 @@
       "name": "Start adding audio to the video",
       "credentials": {
         "httpHeaderAuth": {
-          "id": "BUYuOe8V0hqLtA02",
-          "name": "fal.ai"
+          "id": "fal-ai-key",
+          "name": "Fal AI"
         }
       }
     },

@@ -1,0 +1,431 @@
+{
+  "name": "Video Motivational Shorts - Orchestrator (Free Tier Optimized)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "motivational-shorts-start",
+        "responseMode": "responseNode",
+        "options": {
+          "noResponseBody": false
+        }
+      },
+      "id": "main-trigger",
+      "name": "Main Process Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "free-tier-config",
+              "name": "max_stories_per_batch",
+              "value": "={{ Math.min(3, $json.stories?.length || 1) }}",
+              "type": "number"
+            },
+            {
+              "id": "timeout-config",
+              "name": "workflow_timeout",
+              "value": 300000,
+              "type": "number"
+            },
+            {
+              "id": "retry-config",
+              "name": "max_workflow_retries",
+              "value": 1,
+              "type": "number"
+            },
+            {
+              "id": "image-webhook",
+              "name": "image_generation_webhook",
+              "value": "http://localhost:5678/webhook/generate-images",
+              "type": "string"
+            },
+            {
+              "id": "tts-webhook",
+              "name": "tts_generation_webhook",
+              "value": "http://localhost:5678/webhook/generate-tts",
+              "type": "string"
+            },
+            {
+              "id": "processing-status",
+              "name": "current_step",
+              "value": "image_generation",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "orchestrator-config",
+      "name": "Orchestrator Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [700, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Orchestrator Config').item.json.image_generation_webhook }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "stories",
+              "value": "={{ $json.stories?.slice(0, $('Orchestrator Config').item.json.max_stories_per_batch) || [] }}"
+            },
+            {
+              "name": "webhook_url",
+              "value": "{{ $('Orchestrator Config').item.json.tts_generation_webhook }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": "={{ $('Orchestrator Config').item.json.workflow_timeout }}",
+          "retry": {
+            "enabled": true,
+            "maxTries": "={{ $('Orchestrator Config').item.json.max_workflow_retries }}"
+          }
+        }
+      },
+      "id": "trigger-image-gen",
+      "name": "Trigger Image Generation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 400],
+      "onError": "continueErrorOutput",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "image-success-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "check-image-success",
+      "name": "Check Image Generation Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success-update",
+              "name": "current_step",
+              "value": "tts_generation",
+              "type": "string"
+            },
+            {
+              "id": "image-results",
+              "name": "image_generation_results",
+              "value": "={{ $json }}",
+              "type": "object"
+            },
+            {
+              "id": "progress-update",
+              "name": "progress_percentage",
+              "value": 33,
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "id": "update-progress-success",
+      "name": "Update Progress - Image Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1300, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "error-step",
+              "name": "current_step",
+              "value": "failed_image_generation",
+              "type": "string"
+            },
+            {
+              "id": "error-details",
+              "name": "error_details",
+              "value": "={{ $json.error || 'Image generation workflow failed' }}",
+              "type": "string"
+            },
+            {
+              "id": "failure-time",
+              "name": "failed_at",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "handle-image-error",
+      "name": "Handle Image Generation Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1300, 500]
+    },
+    {
+      "parameters": {
+        "unit": "seconds",
+        "amount": 5
+      },
+      "id": "brief-wait",
+      "name": "Brief Wait Before TTS",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Orchestrator Config').first().json.tts_generation_webhook }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "stories",
+              "value": "={{ $json.stories || [] }}"
+            },
+            {
+              "name": "image_results",
+              "value": "={{ $json.image_generation_results || {} }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": "={{ $('Orchestrator Config').first().json.workflow_timeout }}"
+        }
+      },
+      "id": "trigger-tts-gen",
+      "name": "Trigger TTS Generation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1700, 300],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "final-step",
+              "name": "current_step",
+              "value": "completed",
+              "type": "string"
+            },
+            {
+              "id": "completion-time",
+              "name": "completed_at",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "final-results",
+              "name": "final_results",
+              "value": "={{ $json }}",
+              "type": "object"
+            },
+            {
+              "id": "total-processed",
+              "name": "total_processed",
+              "value": "={{ $json.processed_items || 0 }}",
+              "type": "number"
+            },
+            {
+              "id": "success-rate",
+              "name": "success_rate",
+              "value": "={{ Math.round(($json.successful || 0) / ($json.processed_items || 1) * 100) }}",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "id": "final-results-map",
+      "name": "Map Final Results",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1900, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { 'status': $json.current_step, 'message': $json.current_step === 'completed' ? 'Video generation process completed successfully' : 'Process failed at step: ' + $json.current_step, 'results': $json, 'execution_time': $executionTime, 'timestamp': $now } }}"
+      },
+      "id": "final-response",
+      "name": "Final Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2100, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { 'status': 'error', 'step': $json.current_step, 'error': $json.error_details, 'failed_at': $json.failed_at } }}"
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2100, 500]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Main Process Trigger": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator Config": {
+      "main": [
+        [
+          {
+            "node": "Trigger Image Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Image Generation": {
+      "main": [
+        [
+          {
+            "node": "Check Image Generation Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Image Generation Success": {
+      "main": [
+        [
+          {
+            "node": "Update Progress - Image Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Image Generation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Progress - Image Success": {
+      "main": [
+        [
+          {
+            "node": "Brief Wait Before TTS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Image Generation Error": {
+      "main": [
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brief Wait Before TTS": {
+      "main": [
+        [
+          {
+            "node": "Trigger TTS Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger TTS Generation": {
+      "main": [
+        [
+          {
+            "node": "Map Final Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Final Results": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "workflow_error_handler"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "render-free-tier-optimized"
+  },
+  "id": "video-motivational-shorts-orchestrator",
+  "tags": [
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "free-tier-optimized",
+      "name": "Free Tier Optimized"
+    },
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "orchestrator",
+      "name": "Orchestrator"
+    }
+  ]
+}

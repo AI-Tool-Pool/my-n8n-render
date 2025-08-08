@@ -1,0 +1,484 @@
+{
+  "name": "AI Poem TikTok Generator - Free Tier Optimized",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "poem-generator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "poem-trigger",
+      "name": "Poem Generation Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "free-tier-limits",
+              "name": "max_poems_per_request",
+              "value": 2,
+              "type": "number"
+            },
+            {
+              "id": "timeout-config",
+              "name": "api_timeout",
+              "value": 30000,
+              "type": "number"
+            },
+            {
+              "id": "image-size",
+              "name": "image_width",
+              "value": 720,
+              "type": "number"
+            },
+            {
+              "id": "image-height",
+              "name": "image_height",
+              "value": 1280,
+              "type": "number"
+            },
+            {
+              "id": "model-config",
+              "name": "llm_model",
+              "value": "deepseek-r1",
+              "type": "string"
+            },
+            {
+              "id": "image-model",
+              "name": "image_model",
+              "value": "black-forest-labs/FLUX.1-schnell-Free",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "config-setup",
+      "name": "Free Tier Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [700, 400]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "completions",
+        "model": "deepseek-r1",
+        "messages": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a creative poet. Generate a short, engaging poem (max 50 words) suitable for TikTok videos. Also provide a brief image prompt for the poem's visual representation."
+            },
+            {
+              "role": "user",
+              "content": "Create a motivational poem about {{ $json.topic || 'life and dreams' }}. Return JSON format: {\"poem\": \"poem text\", \"image_prompt\": \"visual description\"}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.8,
+          "maxTokens": 150
+        }
+      },
+      "id": "poem-generator",
+      "name": "Generate Poem with DeepSeek",
+      "type": "n8n-nodes-base.deepSeek",
+      "typeVersion": 1,
+      "position": [900, 400],
+      "credentials": {
+        "deepSeekApi": {
+          "id": "deepseek-api-cred",
+          "name": "DeepSeek API"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the poem and image prompt from DeepSeek response\ntry {\n  const response = $input.first().json.choices[0].message.content;\n  \n  // Try to extract JSON from the response\n  let poemData;\n  const jsonMatch = response.match(/\\{[^}]*\\}/);\n  \n  if (jsonMatch) {\n    poemData = JSON.parse(jsonMatch[0]);\n  } else {\n    // Fallback: split response manually\n    const lines = response.split('\\n').filter(line => line.trim());\n    poemData = {\n      poem: lines.slice(0, -1).join('\\n').trim(),\n      image_prompt: lines[lines.length - 1].replace('Image:', '').trim()\n    };\n  }\n  \n  // Ensure we have required fields\n  if (!poemData.poem) poemData.poem = response.substring(0, 200);\n  if (!poemData.image_prompt) poemData.image_prompt = 'Beautiful, inspiring scene';\n  \n  // Limit poem length for free tier\n  if (poemData.poem.length > 200) {\n    poemData.poem = poemData.poem.substring(0, 200) + '...';\n  }\n  \n  return [{\n    json: {\n      ...poemData,\n      word_count: poemData.poem.split(' ').length,\n      character_count: poemData.poem.length,\n      generated_at: new Date().toISOString()\n    }\n  }];\n  \n} catch (error) {\n  // Error handling - return default poem\n  return [{\n    json: {\n      poem: \"Dreams take flight on wings of hope,\\nThrough valleys deep, up every slope.\\nBelieve in you, the path unfolds,\\nYour story's worth its weight in gold.\",\n      image_prompt: \"Sunrise over mountains with birds flying, inspirational scene\",\n      word_count: 24,\n      character_count: 136,\n      generated_at: new Date().toISOString(),\n      fallback: true,\n      error: error.message\n    }\n  }];\n}"
+      },
+      "id": "parse-poem-response",
+      "name": "Parse Poem Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "poem-quality-check",
+              "leftValue": "={{ $json.word_count }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "content-check",
+              "leftValue": "={{ $json.poem }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "quality-check",
+      "name": "Quality Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1300, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.together.ai/v1/images/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{ $('Free Tier Configuration').first().json.image_model }}"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.image_prompt }}, high quality, vertical format, TikTok style"
+            },
+            {
+              "name": "width",
+              "value": "={{ $('Free Tier Configuration').first().json.image_width }}"
+            },
+            {
+              "name": "height",
+              "value": "={{ $('Free Tier Configuration').first().json.image_height }}"
+            },
+            {
+              "name": "steps",
+              "value": 1
+            }
+          ]
+        },
+        "options": {
+          "timeout": "={{ $('Free Tier Configuration').first().json.api_timeout }}",
+          "retry": {
+            "enabled": true,
+            "maxTries": 2
+          }
+        }
+      },
+      "id": "generate-image",
+      "name": "Generate Poem Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1500, 300],
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "togetherai-cred",
+          "name": "TogetherAI API"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "speech",
+        "model": "tts-1",
+        "voice": "nova",
+        "input": "={{ $('Parse Poem Response').item.json.poem }}",
+        "responseFormat": "mp3",
+        "speed": 1.0
+      },
+      "id": "generate-speech",
+      "name": "Generate Speech with OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [1500, 500],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-api-cred",
+          "name": "OpenAI API"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "id": "merge-media",
+      "name": "Merge Media Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1700, 400]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "final-poem",
+              "name": "poem_text",
+              "value": "={{ $('Parse Poem Response').item.json.poem }}",
+              "type": "string"
+            },
+            {
+              "id": "image-url",
+              "name": "image_url",
+              "value": "={{ $json.data?.[0]?.url || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "audio-data",
+              "name": "has_audio",
+              "value": "={{ !!$binary.data }}",
+              "type": "boolean"
+            },
+            {
+              "id": "generation-stats",
+              "name": "generation_stats",
+              "value": "={{ { word_count: $('Parse Poem Response').item.json.word_count, char_count: $('Parse Poem Response').item.json.character_count, has_image: !!$json.data?.[0]?.url, has_audio: !!$binary.data } }}",
+              "type": "object"
+            },
+            {
+              "id": "completion-time",
+              "name": "completed_at",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "status",
+              "name": "status",
+              "value": "completed",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "final-assembly",
+      "name": "Final Assembly",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1900, 400]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "error-response",
+              "name": "error_message",
+              "value": "Poem quality check failed - insufficient content",
+              "type": "string"
+            },
+            {
+              "id": "fallback-poem",
+              "name": "fallback_poem",
+              "value": "Sometimes dreams seem far away, but hope will light the way. Keep believing, keep achieving, brighter days will come to stay.",
+              "type": "string"
+            },
+            {
+              "id": "error-status",
+              "name": "status",
+              "value": "failed_quality_check",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "handle-quality-failure",
+      "name": "Handle Quality Check Failure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1500, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2100, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2100, 600]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Poem Generation Trigger": {
+      "main": [
+        [
+          {
+            "node": "Free Tier Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Free Tier Configuration": {
+      "main": [
+        [
+          {
+            "node": "Generate Poem with DeepSeek",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Poem with DeepSeek": {
+      "main": [
+        [
+          {
+            "node": "Parse Poem Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Poem Response": {
+      "main": [
+        [
+          {
+            "node": "Quality Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Check": {
+      "main": [
+        [
+          {
+            "node": "Generate Poem Image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Speech with OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Quality Check Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Poem Image": {
+      "main": [
+        [
+          {
+            "node": "Merge Media Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Speech with OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Merge Media Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Media Results": {
+      "main": [
+        [
+          {
+            "node": "Final Assembly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final Assembly": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Quality Check Failure": {
+      "main": [
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "render-free-tier-optimized"
+  },
+  "id": "video-poem-generator-optimized",
+  "tags": [
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "free-tier-optimized",
+      "name": "Free Tier Optimized"
+    }
+  ]
+}

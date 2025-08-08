@@ -2,26 +2,26 @@
   "database": {
     "type": "postgresdb",
     "postgresdb": {
-      "host": "${DB_POSTGRES_HOST}",
-      "port": "${DB_POSTGRES_PORT}",
-      "database": "${DB_POSTGRES_DB}",
-      "username": "${DB_POSTGRES_USER}",
-      "password": "${DB_POSTGRES_PASSWORD}",
+      "host": "${DB_POSTGRESDB_HOST}",
+      "port": "${DB_POSTGRESDB_PORT}",
+      "database": "${DB_POSTGRESDB_DATABASE}",
+      "username": "${DB_POSTGRESDB_USER}",
+      "password": "${DB_POSTGRESDB_PASSWORD}",
       "ssl": {
-        "enabled": true,
+        "enabled": false,
         "rejectUnauthorized": false
       },
-      "poolSize": 3,
-      "connectionTimeoutMillis": 30000,
-      "idleTimeoutMillis": 300000,
-      "maxUses": 7500
+      "poolSize": 2,
+      "connectionTimeoutMillis": 20000,
+      "idleTimeoutMillis": 180000,
+      "maxUses": 5000
     }
   },
   "cache": {
     "backend": "memory",
     "memory": {
-      "maxSize": 50,
-      "ttl": 3600
+      "maxSize": 25,
+      "ttl": 1800
     }
   },
   "queue": {
@@ -34,14 +34,14 @@
   },
   "executions": {
     "mode": "queue",
-    "timeout": 900,
-    "maxTimeout": 3600,
+    "timeout": 600,
+    "maxTimeout": 1200,
     "saveDataOnError": "all",
     "saveDataOnSuccess": "none",
     "saveDataManualExecutions": false,
     "pruneData": true,
-    "pruneDataMaxAge": 168,
-    "pruneDataTimeout": 3600
+    "pruneDataMaxAge": 72,
+    "pruneDataTimeout": 1800
   },
   "workflows": {
     "callerPolicyDefaultOption": "any",
@@ -101,11 +101,11 @@
   "externalFrontendHooks": "",
   "externalHookFiles": "",
   "logs": {
-    "level": "${LOG_LEVEL:-info}",
+    "level": "${LOG_LEVEL:-warn}",
     "output": "console",
     "file": {
-      "fileCountMax": 3,
-      "fileSizeMax": 16,
+      "fileCountMax": 2,
+      "fileSizeMax": 8,
       "location": "/tmp/n8n.log"
     }
   },
@@ -129,8 +129,8 @@
     "mode": "filesystem",
     "availableModes": "filesystem",
     "localStoragePath": "/tmp/n8n-binary-data",
-    "binaryDataTTL": 60,
-    "persistedBinaryDataTTL": 1440
+    "binaryDataTTL": 30,
+    "persistedBinaryDataTTL": 720
   },
   "publicApi": {
     "disabled": false,

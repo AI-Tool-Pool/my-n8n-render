@@ -31,7 +31,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_TOKEN"
+              "value": "Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
             }
           ]
         },
@@ -74,7 +74,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_TOKEN"
+              "value": "Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
             }
           ]
         },
@@ -201,7 +201,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_TOKEN"
+              "value": "Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
             }
           ]
         },
@@ -230,7 +230,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_TOKEN"
+              "value": "Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
             }
           ]
         },
@@ -251,13 +251,16 @@
         "operation": "analyze",
         "modelId": {
           "__rl": true,
-          "value": "gpt-4o",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4O"
+          "cachedResultName": "GPT-4O-Mini"
         },
         "text": "Could you extract the following information from the invoice?\n\n{\n\"Entry Number\": \"\",\n\"Expense Date\": \"\",\n\"Vendor\": \"\",\n\"Expense Type\": \"\", (Housing, Transportation, Food, etc...)\n\"Expense Description\": \"\",\n\"Expense Amount\": \"\",\n\"Customer Name\": \"\",\n\"Reference#\": \"\"\n}\n\nreturn in JSON format, only return the JSON without other text.",
         "inputType": "base64",
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 1000
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
@@ -269,8 +272,8 @@
       "name": "Image Analyser",
       "credentials": {
         "openAiApi": {
-          "id": "B1xgcEjX0hRSH8UV",
-          "name": "OpenAi Account"
+          "id": "OpenAI_API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -428,9 +431,9 @@
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "gpt-4",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4"
+          "cachedResultName": "GPT-4O-Mini"
         },
         "messages": {
           "values": [
@@ -439,7 +442,10 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 500
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
@@ -451,8 +457,8 @@
       "name": "OpenAI",
       "credentials": {
         "openAiApi": {
-          "id": "B1xgcEjX0hRSH8UV",
-          "name": "OpenAi Account"
+          "id": "OpenAI_API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -510,7 +516,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_TOKEN"
+              "value": "Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
             }
           ]
         },
@@ -539,7 +545,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_TOKEN"
+              "value": "Bearer {{ $env.WHATSAPP_ACCESS_TOKEN }}"
             }
           ]
         },
@@ -557,7 +563,9 @@
     {
       "parameters": {
         "resource": "file",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "b57b2598-4db6-4d3b-a70c-8c4a156e1a67",
       "name": "OpenAI1",
@@ -569,8 +577,8 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "B1xgcEjX0hRSH8UV",
-          "name": "OpenAi Account"
+          "id": "OpenAI_API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -580,15 +588,17 @@
         "operation": "create",
         "modelId": {
           "__rl": true,
-          "value": "gpt-4o",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4O"
+          "cachedResultName": "GPT-4O-Mini"
         },
         "name": "File Assistant",
         "instructions": "You are a file assistant and will answer user question",
         "knowledgeRetrieval": true,
         "file_ids": "={{ $json.id }}",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "2e57f101-c4fc-4d37-833a-24d16676a475",
       "name": "OpenAI2",
@@ -600,8 +610,8 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "B1xgcEjX0hRSH8UV",
-          "name": "OpenAi Account"
+          "id": "OpenAI_API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -616,7 +626,9 @@
         "prompt": "define",
         "text": "={{ $json.prompt }}",
         "options": {
-          "maxRetries": 20
+          "maxRetries": 5,
+          "timeout": 30000,
+          "maxTokens": 1000
         }
       },
       "id": "5e80d021-9b33-428f-b2be-e46f498a86a9",
@@ -629,8 +641,8 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "B1xgcEjX0hRSH8UV",
-          "name": "OpenAi Account"
+          "id": "OpenAI_API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -911,7 +923,9 @@
       "parameters": {
         "resource": "audio",
         "operation": "transcribe",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "46fb6f0f-4771-430e-9856-0a66d6f7a7ff",
       "name": "OpenAI Transcribe",
@@ -923,8 +937,8 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "B1xgcEjX0hRSH8UV",
-          "name": "OpenAi Account"
+          "id": "OpenAI_API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -948,9 +962,9 @@
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "gpt-4",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4"
+          "cachedResultName": "GPT-4O-Mini"
         },
         "messages": {
           "values": [
@@ -959,7 +973,10 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 800
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.6,
@@ -971,8 +988,8 @@
       "name": "OpenAI4",
       "credentials": {
         "openAiApi": {
-          "id": "B1xgcEjX0hRSH8UV",
-          "name": "OpenAi Account"
+          "id": "OpenAI_API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -1549,8 +1566,12 @@
     }
   },
   "active": false,
+  "executionTimeout": 30,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
   },
   "versionId": "fb1cc652-ee39-49f7-9b10-f6bea493335d",
   "meta": {

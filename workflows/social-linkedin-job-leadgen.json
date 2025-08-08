@@ -1,5 +1,5 @@
 {
-  "name": "My workflow 14",
+  "name": "LinkedIn Job Lead Generation - Free Tier Optimized",
   "nodes": [
     {
       "parameters": {
@@ -300,12 +300,11 @@
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4o-mini"
-        },
-        "options": {}
+        "model": "gpt-4o-mini",
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 1500
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -314,8 +313,8 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "tGvJRP2th9CbI2oq",
-          "name": "OpenAi account 2"
+          "id": "OpenAI-API",
+          "name": "OpenAI API"
         }
       }
     },
@@ -342,7 +341,7 @@
     },
     {
       "parameters": {
-        "maxItems": 2
+        "maxItems": 1
       },
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
@@ -381,13 +380,13 @@
             {
               "id": "baa6e64d-4305-421a-be0a-60cc6d2b06bf",
               "name": "GOOGLE_API_KEY",
-              "value": "{YOUR_GOOGLE_API_KEY}",
+              "value": "{{ $env.GOOGLE_API_KEY }}",
               "type": "string"
             },
             {
               "id": "d8e33d4c-b790-488f-a57c-58b80bb5824d",
               "name": "GOOGLE_CUSTOM_SEARCH",
-              "value": "{YOUR_GOOGLE_CUSTOM_SEARCH_ID}",
+              "value": "{{ $env.GOOGLE_CUSTOM_SEARCH_ID }}",
               "type": "string"
             }
           ]
@@ -907,8 +906,8 @@
       "webhookId": "5239298c-8f8b-408b-bc7e-cc36cd3a59e8",
       "credentials": {
         "gmailOAuth2": {
-          "id": "E1ofNfqugb4UykcT",
-          "name": "Gmail 2rum2room2"
+          "id": "Gmail-OAuth2",
+          "name": "Gmail OAuth2"
         }
       }
     },
@@ -1958,7 +1957,12 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "UTC",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "versionId": "1fbd84d5-ed35-46b4-830c-84dea19669ba",
   "meta": {

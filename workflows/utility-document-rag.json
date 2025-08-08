@@ -233,7 +233,8 @@
         "resource": "embedding",
         "text": "={{ $json.chunks.map(chunk => chunk.text).join('\\n\\n') }}",
         "options": {
-          "model": "text-embedding-ada-002"
+          "model": "text-embedding-3-small",
+          "maxTokens": 8000
         }
       },
       "name": "Generate Embeddings",
@@ -245,9 +246,14 @@
       ],
       "credentials": {
         "openAiApi": {
-          "name": "OpenAI",
-          "apiKey": "YOUR_OPENAI_API_KEY"
+          "id": "openai_standard",
+          "name": "OpenAI Standard"
         }
+      },
+      "timeout": 30000,
+      "retryOnFail": {
+        "enabled": true,
+        "maxTries": 3
       }
     },
     {
@@ -547,7 +553,13 @@
     }
   },
   "active": true,
-  "settings": {},
+  "settings": {
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "timeout": 600,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
   "versionId": "9",
   "id": "9",
   "meta": {

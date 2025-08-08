@@ -1,5 +1,5 @@
 {
-  "name": "Tutorial 8.3 - An AI Agent to generate UNLIMITED Instagram Image Posts",
+  "name": "Instagram Image Generator - Free Tier Optimized",
   "nodes": [
     {
       "parameters": {},
@@ -29,7 +29,7 @@
       ],
       "credentials": {
         "httpQueryAuth": {
-          "id": "DzVQR8mUOUeCXBix",
+          "id": "Screenshot-API",
           "name": "Screenshot API"
         }
       }
@@ -90,7 +90,7 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "QZsvmtZA43DzE9MH",
+          "id": "Together-AI",
           "name": "Together AI"
         }
       }
@@ -129,7 +129,7 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "2kBDWYJCjuOW4hQH",
+          "id": "Exa-API",
           "name": "Exa API"
         }
       }
@@ -169,8 +169,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "Dkr5uVHPbgO4n8uI",
-          "name": "Deepseek API"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -195,8 +195,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "Dkr5uVHPbgO4n8uI",
-          "name": "Deepseek API"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -234,8 +234,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "Dkr5uVHPbgO4n8uI",
-          "name": "Deepseek API"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -275,8 +275,8 @@
       ],
       "credentials": {
         "googleCloudStorageOAuth2Api": {
-          "id": "APyiw1TsvCcUIbPY",
-          "name": "Google Cloud Storage account"
+          "id": "Google-Cloud-Storage",
+          "name": "Google Cloud Storage"
         }
       }
     },
@@ -324,8 +324,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "Dkr5uVHPbgO4n8uI",
-          "name": "Deepseek API"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -419,8 +419,8 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "fXkt3mkIhz4ruk1c",
-          "name": "Google Sheets Account"
+          "id": "Google-Sheets",
+          "name": "Google Sheets"
         }
       }
     },
@@ -673,8 +673,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "ItUh8nT63JJqeEwt",
-          "name": "Redis account"
+          "id": "Redis",
+          "name": "Redis"
         }
       }
     },
@@ -695,8 +695,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "ItUh8nT63JJqeEwt",
-          "name": "Redis account"
+          "id": "Redis",
+          "name": "Redis"
         }
       }
     },
@@ -716,8 +716,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "ItUh8nT63JJqeEwt",
-          "name": "Redis account"
+          "id": "Redis",
+          "name": "Redis"
         }
       }
     },
@@ -758,8 +758,8 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "fXkt3mkIhz4ruk1c",
-          "name": "Google Sheets Account"
+          "id": "Google-Sheets",
+          "name": "Google Sheets"
         }
       }
     },
@@ -780,8 +780,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "ItUh8nT63JJqeEwt",
-          "name": "Redis account"
+          "id": "Redis",
+          "name": "Redis"
         }
       }
     },
@@ -802,8 +802,8 @@
       ],
       "credentials": {
         "redis": {
-          "id": "ItUh8nT63JJqeEwt",
-          "name": "Redis account"
+          "id": "Redis",
+          "name": "Redis"
         }
       }
     },
@@ -905,8 +905,8 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "fXkt3mkIhz4ruk1c",
-          "name": "Google Sheets Account"
+          "id": "Google-Sheets",
+          "name": "Google Sheets"
         }
       }
     },
@@ -931,8 +931,8 @@
       ],
       "credentials": {
         "googleCloudStorageOAuth2Api": {
-          "id": "APyiw1TsvCcUIbPY",
-          "name": "Google Cloud Storage account"
+          "id": "Google-Cloud-Storage",
+          "name": "Google Cloud Storage"
         }
       }
     },
@@ -1008,8 +1008,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "Dkr5uVHPbgO4n8uI",
-          "name": "Deepseek API"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -1047,8 +1047,8 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "Dkr5uVHPbgO4n8uI",
-          "name": "Deepseek API"
+          "id": "DeepSeek-API",
+          "name": "DeepSeek API"
         }
       }
     },
@@ -1088,7 +1088,7 @@
       ],
       "credentials": {
         "httpHeaderAuth": {
-          "id": "QZsvmtZA43DzE9MH",
+          "id": "Together-AI",
           "name": "Together AI"
         }
       }
@@ -1114,8 +1114,8 @@
       ],
       "credentials": {
         "googleCloudStorageOAuth2Api": {
-          "id": "APyiw1TsvCcUIbPY",
-          "name": "Google Cloud Storage account"
+          "id": "Google-Cloud-Storage",
+          "name": "Google Cloud Storage"
         }
       }
     },
@@ -1182,7 +1182,7 @@
       ],
       "credentials": {
         "httpQueryAuth": {
-          "id": "DzVQR8mUOUeCXBix",
+          "id": "Screenshot-API",
           "name": "Screenshot API"
         }
       }
@@ -1208,8 +1208,8 @@
       ],
       "credentials": {
         "googleCloudStorageOAuth2Api": {
-          "id": "APyiw1TsvCcUIbPY",
-          "name": "Google Cloud Storage account"
+          "id": "Google-Cloud-Storage",
+          "name": "Google Cloud Storage"
         }
       }
     },
@@ -1280,8 +1280,8 @@
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "fXkt3mkIhz4ruk1c",
-          "name": "Google Sheets Account"
+          "id": "Google-Sheets",
+          "name": "Google Sheets"
         }
       }
     },
@@ -1760,7 +1760,12 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "UTC",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "versionId": "882fc7cd-94c3-4693-ad39-9be9012834ef",
   "meta": {

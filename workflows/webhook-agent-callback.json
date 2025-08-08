@@ -4,7 +4,11 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "agent-run-callback"
+        "path": "agent-run-callback",
+        "responseMode": "onReceived",
+        "options": {
+          "noResponseBody": false
+        }
       },
       "id": "1",
       "name": "Webhook",
@@ -14,16 +18,67 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.VERCEL_API_URL }}/api/agent-run",
+        "url": "{{ $env.WEBHOOK_URL }}/api/agent-run",
         "method": "POST",
         "jsonParameters": true,
-        "bodyParametersJson": "{\"task\": \"{{$json[\"task\"]}}\", \"callback_url\": \"{{$json[\"callback_url\"]}}\"}"
+        "bodyParametersJson": "{\"task\": \"{{$json[\"task\"]}}\", \"callback_url\": \"{{$json[\"callback_url\"]}}\"}",
+        "timeout": 30000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 2
+          },
+          "batching": {
+            "enabled": false
+          }
+        }
       },
       "id": "2",
       "name": "Run Agent with Callback",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 2,
       "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equal",
+              "value2": "success"
+            }
+          ]
+        }
+      },
+      "id": "3",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"success\", \"message\": \"Agent run initiated successfully\", \"data\": $json } }}"
+      },
+      "id": "4",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [960, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"error\", \"message\": \"Failed to initiate agent run\", \"error\": $json.error || \"Unknown error\" } }}",
+        "responseCode": 500
+      },
+      "id": "5",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [960, 400]
     }
   ],
   "connections": {
@@ -37,9 +92,45 @@
           }
         ]
       ]
+    },
+    "Run Agent with Callback": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
-  "settings": {},
-  "tags": ["webhook", "agent", "callback", "monetizable"]
+  "settings": {
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 300,
+    "timezone": "UTC"
+  },
+  "tags": ["webhook", "agent", "callback", "monetizable", "optimized"]
 }

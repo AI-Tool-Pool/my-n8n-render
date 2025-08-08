@@ -1,5 +1,5 @@
 {
-  "name": "Tutorial 14.2 - Auto-Clip Video (Local Host) Public",
+  "name": "[OPTIMIZED] Auto-Clip Video Local Free Tier",
   "nodes": [
     {
       "parameters": {},
@@ -33,10 +33,13 @@
       "parameters": {
         "model": {
           "__rl": true,
-          "value": "=deepseek-ai/DeepSeek-V3",
+          "value": "=deepseek-ai/DeepSeek-R1",
           "mode": "id"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 500
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -45,7 +48,7 @@
       "name": "Together AI",
       "credentials": {
         "openAiApi": {
-          "id": "d4RYNTF07pu6bvG1",
+          "id": "together-ai-key",
           "name": "Together AI"
         }
       }
@@ -293,7 +296,7 @@
       "name": "Together AI1",
       "credentials": {
         "openAiApi": {
-          "id": "d4RYNTF07pu6bvG1",
+          "id": "together-ai-key",
           "name": "Together AI"
         }
       }
@@ -366,8 +369,8 @@
       "position": [520, 1480],
       "credentials": {
         "youTubeOAuth2Api": {
-          "id": "jbtLUqsj1nV0x5Nq",
-          "name": "YouTube account"
+          "id": "youtube-oauth2-key",
+          "name": "YouTube API"
         }
       }
     },
@@ -398,8 +401,8 @@
       "position": [860, 1480],
       "credentials": {
         "youTubeOAuth2Api": {
-          "id": "jbtLUqsj1nV0x5Nq",
-          "name": "YouTube account"
+          "id": "youtube-oauth2-key",
+          "name": "YouTube API"
         }
       }
     },

@@ -4,7 +4,11 @@
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "agent-workflow-trigger"
+        "path": "agent-workflow-trigger",
+        "responseMode": "onReceived",
+        "options": {
+          "noResponseBody": false
+        }
       },
       "id": "1",
       "name": "Webhook",
@@ -14,12 +18,21 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.CLOUDFLARE_WORKER_URL }}/agent/run",
+        "url": "{{ $env.WEBHOOK_URL }}/agent/run",
         "method": "POST",
         "jsonParameters": true,
-        "options": {},
-        "bodyParametersJson": "{\"task\": \"example_task\", \"params\": {}}",
-        "headerParametersJson": "{\"Authorization\": \"Bearer {{$env.CLOUDFLARE_API_KEY}}\"}"
+        "bodyParametersJson": "={{ { \"task\": $json.task || \"example_task\", \"params\": $json.params || {} } }}",
+        "headerParametersJson": "{\"Authorization\": \"Bearer {{ $env.CLOUDFLARE_API_KEY }}\", \"Content-Type\": \"application/json\"}",
+        "timeout": 30000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 2
+          },
+          "batching": {
+            "enabled": false
+          }
+        }
       },
       "id": "2",
       "name": "Run Agent",
@@ -29,9 +42,17 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.CLOUDFLARE_WORKER_URL }}/agent/status?session_id={{$json[\"session_id\"]}}",
+        "url": "{{ $env.WEBHOOK_URL }}/agent/status",
         "method": "GET",
-        "headerParametersJson": "{\"Authorization\": \"Bearer {{$env.CLOUDFLARE_API_KEY}}\"}"
+        "headerParametersJson": "{\"Authorization\": \"Bearer {{ $env.CLOUDFLARE_API_KEY }}\"}",
+        "queryParametersJson": "={{ { \"session_id\": $json.session_id } }}",
+        "timeout": 15000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 1
+          }
+        }
       },
       "id": "3",
       "name": "Check Agent Status",
@@ -41,8 +62,15 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.CLOUDFLARE_WORKER_URL }}/agent/health",
-        "method": "GET"
+        "url": "{{ $env.WEBHOOK_URL }}/agent/health",
+        "method": "GET",
+        "timeout": 10000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 1
+          }
+        }
       },
       "id": "4",
       "name": "Health Check",
@@ -52,8 +80,15 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.CLOUDFLARE_WORKER_URL }}/agent/tools",
-        "method": "GET"
+        "url": "{{ $env.WEBHOOK_URL }}/agent/tools",
+        "method": "GET",
+        "timeout": 15000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 1
+          }
+        }
       },
       "id": "5",
       "name": "List Tools",
@@ -63,8 +98,15 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.CLOUDFLARE_WORKER_URL }}/agent/models",
-        "method": "GET"
+        "url": "{{ $env.WEBHOOK_URL }}/agent/models",
+        "method": "GET",
+        "timeout": 15000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 1
+          }
+        }
       },
       "id": "6",
       "name": "List Models",
@@ -74,9 +116,16 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.CLOUDFLARE_WORKER_URL }}/agent/sessions",
+        "url": "{{ $env.WEBHOOK_URL }}/agent/sessions",
         "method": "GET",
-        "headerParametersJson": "{\"Authorization\": \"Bearer {{$env.CLOUDFLARE_API_KEY}}\"}"
+        "headerParametersJson": "{\"Authorization\": \"Bearer {{ $env.CLOUDFLARE_API_KEY }}\"}",
+        "timeout": 15000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 1
+          }
+        }
       },
       "id": "7",
       "name": "List Sessions",
@@ -86,14 +135,62 @@
     },
     {
       "parameters": {
-        "url": "{{ $env.CLOUDFLARE_WORKER_URL }}/agent/metrics",
-        "method": "GET"
+        "url": "{{ $env.WEBHOOK_URL }}/agent/metrics",
+        "method": "GET",
+        "timeout": 15000,
+        "options": {
+          "retry": {
+            "enabled": true,
+            "maxRetries": 1
+          }
+        }
       },
       "id": "8",
       "name": "Get Metrics",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 2,
       "position": [1200, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equal",
+              "value2": "success"
+            }
+          ]
+        }
+      },
+      "id": "9",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1440, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"success\", \"message\": \"Agent workflow completed successfully\", \"data\": { \"agent_run\": $('Run Agent').item.json, \"status\": $('Check Agent Status').item.json, \"health\": $('Health Check').item.json, \"tools\": $('List Tools').item.json, \"models\": $('List Models').item.json, \"sessions\": $('List Sessions').item.json, \"metrics\": $('Get Metrics').item.json } } }}"
+      },
+      "id": "10",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1680, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"error\", \"message\": \"Agent workflow failed\", \"error\": $json.error || \"Unknown error\" } }}",
+        "responseCode": 500
+      },
+      "id": "11",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1680, 400]
     }
   ],
   "connections": {
@@ -161,9 +258,56 @@
           }
         ]
       ]
+    },
+    "List Sessions": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Metrics": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
-  "settings": {},
-  "tags": ["agent", "automation", "comprehensive"]
+  "settings": {
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 300,
+    "timezone": "UTC"
+  },
+  "tags": ["agent", "automation", "comprehensive", "webhook", "optimized"]
 }

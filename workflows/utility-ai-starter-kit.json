@@ -30,23 +30,27 @@
     },
     {
       "parameters": {
-        "model": "llama3.2:latest",
-        "options": {}
+        "model": "gpt-4o-mini",
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.7
+        }
       },
       "id": "3dee878b-d748-4829-ac0a-cfd6705d31e5",
-      "name": "Ollama Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
       "position": [
         900,
         560
       ],
       "credentials": {
-        "ollamaApi": {
-          "id": "xHuYe0MDGOs9IpBW",
-          "name": "Local Ollama service"
+        "openAiApi": {
+          "id": "openai_standard",
+          "name": "OpenAI Standard"
         }
-      }
+      },
+      "timeout": 30000
     }
   ],
   "connections": {
@@ -74,7 +78,11 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "timeout": 300
   },
   "staticData": null,
   "meta": {

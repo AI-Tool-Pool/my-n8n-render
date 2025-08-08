@@ -1,5 +1,5 @@
 {
-  "name": "My workflow 14",
+  "name": "Content Blog Post Creation",
   "nodes": [
     {
       "parameters": {
@@ -62,8 +62,8 @@
       "name": "Wordpress",
       "credentials": {
         "wordpressApi": {
-          "id": "IvzKT4JMIWbSbJm3",
-          "name": "Wordpress account"
+          "id": "wordpress_api_key",
+          "name": "WordPress API"
         }
       }
     },
@@ -98,7 +98,11 @@
           "mode": "list",
           "value": "gpt-4o-mini"
         },
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "maxTokens": 4000,
+          "temperature": 0.7
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
@@ -107,8 +111,8 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "tGvJRP2th9CbI2oq",
-          "name": "OpenAi account 2"
+          "id": "openai_api_key",
+          "name": "OpenAI API"
         }
       }
     },
@@ -151,7 +155,17 @@
     {
       "parameters": {
         "url": "https://pinboard.in/popular/",
-        "options": {}
+        "options": {
+          "timeout": 30000,
+          "redirect": {
+            "followRedirects": true,
+            "maxRedirects": 3
+          },
+          "retry": {
+            "count": 2,
+            "delay": 1000
+          }
+        }
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -217,7 +231,9 @@
       "position": [10580, 1440],
       "id": "d13ec8ec-ce16-413e-a458-25d20317d481",
       "name": "Come up with a topic1",
-      "retryOnFail": true
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000
     },
     {
       "parameters": {
@@ -230,7 +246,9 @@
       "position": [9160, 1440],
       "id": "6e96cd4d-9672-4f09-bb2a-1701cc99c6a5",
       "name": "Find trending AI bookmarks",
-      "retryOnFail": true
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000
     },
     {
       "parameters": {
@@ -667,7 +685,13 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": {
+      "active": true
+    }
   },
   "versionId": "e50ee71f-9787-4aba-9a3f-28295ac93b96",
   "meta": {
