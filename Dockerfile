@@ -25,6 +25,15 @@ RUN npm install -g n8n@latest \
     && npm cache clean --force \
     && apk del .build-deps
 
+# Copy application files and make them executable
+COPY entrypoint.sh ./entrypoint.sh
+COPY check_health.sh ./check_health.sh
+COPY scripts/ ./scripts/
+COPY config/ ./config/
+
+# Make scripts executable in Alpine stage where shell is available
+RUN chmod +x ./entrypoint.sh ./check_health.sh ./scripts/*.sh
+
 # Stage 3: Security scanner (optional but recommended)
 FROM deps AS security-scan
 RUN npm audit --audit-level=moderate || true
@@ -65,16 +74,11 @@ COPY --from=base /usr/bin/dumb-init /usr/bin/dumb-init
 COPY --from=deps /usr/local/lib/node_modules/n8n /usr/local/lib/node_modules/n8n
 COPY --from=deps /usr/local/bin/n8n /usr/local/bin/n8n
 
-# Copy application files with proper ownership
-COPY --chown=nonroot:nonroot entrypoint.sh ./entrypoint.sh
-COPY --chown=nonroot:nonroot check_health.sh ./check_health.sh
-COPY --chown=nonroot:nonroot scripts/ ./scripts/
-COPY --chown=nonroot:nonroot config/ ./config/
-
-# Make scripts executable
-USER root
-RUN chmod +x ./entrypoint.sh ./check_health.sh ./scripts/*.sh
-USER nonroot
+# Copy application files and make them executable in deps stage first
+COPY --from=deps --chown=nonroot:nonroot /app/entrypoint.sh ./entrypoint.sh
+COPY --from=deps --chown=nonroot:nonroot /app/check_health.sh ./check_health.sh
+COPY --from=deps --chown=nonroot:nonroot /app/scripts/ ./scripts/
+COPY --from=deps --chown=nonroot:nonroot /app/config/ ./config/
 
 # Create necessary directories with proper permissions
 USER root
