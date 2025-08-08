@@ -29,12 +29,10 @@ RUN npm install -g n8n@latest \
 
 # Copy application files and make them executable
 COPY entrypoint.sh ./entrypoint.sh
-COPY check_health.sh ./check_health.sh
-COPY scripts/ ./scripts/
 COPY config/ ./config/
 
 # Make scripts executable in Alpine stage where shell is available
-RUN chmod +x ./entrypoint.sh ./check_health.sh ./scripts/*.sh
+RUN chmod +x ./entrypoint.sh
 
 # Stage 3: Security scanner (optional but recommended)
 FROM deps AS security-scan
@@ -93,8 +91,6 @@ COPY --from=deps /usr/local/bin/n8n /usr/local/bin/n8n
 
 # Copy application files with correct node:node ownership
 COPY --from=deps --chown=node:node /app/entrypoint.sh ./entrypoint.sh
-COPY --from=deps --chown=node:node /app/check_health.sh ./check_health.sh
-COPY --from=deps --chown=node:node /app/scripts/ ./scripts/
 COPY --from=deps --chown=node:node /app/config/ ./config/
 
 # Create necessary directories with proper permissions for node user
@@ -113,7 +109,7 @@ EXPOSE 5678
 
 # Optimized health check with timeout and retries for free tier
 HEALTHCHECK --interval=120s --timeout=30s --start-period=180s --retries=2 \
-  CMD ["/app/check_health.sh"]
+  CMD curl -f http://localhost:5678/ || exit 1
 
 # Use dumb-init for proper signal handling and graceful shutdown
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]

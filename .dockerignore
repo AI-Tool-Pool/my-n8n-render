@@ -34,12 +34,11 @@ node_modules/
 *.log
 npm-debug.log
 
-# Development and deployment scripts
+# Development and deployment scripts (not needed in container)
 scripts/
 check_health.sh
 export_workflows.sh
 import_workflows.sh
-validate-deployment.sh
 
 # Issue templates and development files
 ISSUE_TEMPLATE/
